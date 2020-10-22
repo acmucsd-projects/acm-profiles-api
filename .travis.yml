@@ -1,9 +1,12 @@
 language: python
 python:
-    - "3.8"
+- '3.8'
 install:
-    - pip install pipenv
-    - pipenv sync
+- pip install pipenv
+- pipenv sync
 script:
-    - pipenv run lint
-    - pipenv run test
+- pipenv run lint
+- pipenv run test
+env:
+  global:
+    secure: VyA98x366BseXX3sKgftY01fflRq5Wh2Iv4uS2MUBEITQouD8JsUtasBK04UJS5jEDskSkEeqebdpCCiPKTS0o8eU/DEb3LwqkiJ46RV2RltmRgZoyW2VY07fW0TyAVSdTfCLnw/02SQAYddFX9/1F7nqJcYqqNNe5djCvr0cO/JDWCPXm5frDwLES49eWBbVKBDSbxYFVi3UeKYCF6PnsZBFIXqBvGi+o0fwN7GbUeP1pKl/4eGdvd71gA8JTgQbfh1FINNJibpyRbyysEWAV1ZIVTmllP63l6f4xsnaKFMy+1AcriVcgdpCbsJjp66kQErQ2R7ux7rkbWghDGb9U208zrA7UlerTxsLr0oJPzY+8PuAAexYkCf7OChM6Z81FwQqOOZyI2B7BS7rrPuDzzWX/26jQRjQBXWTF3RBfN8PbceD2KsroWQPCGELdx+tZyCKSryOXExn54bFr4IWRxNzJ56FwOA5fUcEIfvkF5ekDd7QnWbmFjQtZf2UCQIgaOai3EZbVnAxNyjZFr7HpUgTnU4lfqE5mKue7Nc4n1YGQT0Qf1YjamFY7loiOwhEark/eDE8QaovNnceFIIWqwcypefLHZ6knOV4fqnW5wWBWJj6OJHwXHMgeDm8HzMPRbSgAOAkI2ZuD/zjy/WpXbtycBsbY00/PNRcmpqeSA=
