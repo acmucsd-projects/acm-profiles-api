@@ -1,0 +1,9 @@
+language: python
+python:
+    - "3.8"
+install:
+    - pip install pipenv
+    - pipenv sync
+script:
+    - pipenv run lint
+    - pipenv run test
