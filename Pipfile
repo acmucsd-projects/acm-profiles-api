@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 django = "*"
 pylint = "*"
+djangorestframework = "*"
 
 [scripts]
 server = "python manage.py runserver"
