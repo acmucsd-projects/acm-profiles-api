@@ -45,6 +45,6 @@ class User_socials(models.Model):
     snapchat = models.CharField(max_length=255)
     github = models.CharField(max_length=255)
     linkedin = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
+    email = models.EmailField()
 
 
