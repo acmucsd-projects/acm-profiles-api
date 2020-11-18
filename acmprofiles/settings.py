@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'profiles',
-    'rest_framework'
+    'rest_framework',
+    'django.contrib.postgres',
 ]
 
 MIDDLEWARE = [
@@ -78,8 +79,10 @@ WSGI_APPLICATION = 'acmprofiles.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'team_sage',
+        'USER': 'team_sage',
+        'PASSWORD': 'bestsideproject'
     }
 }
 
