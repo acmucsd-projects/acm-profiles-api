@@ -77,12 +77,22 @@ WSGI_APPLICATION = 'acmprofiles.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+
+#intructions for setting up Postgres 
+# download here https://www.postgresql.org/download/
+# pipenv install
+# pipenv shell
+# su OSuser_here
+# createuser -dP db_new_local_username_here (will prompt to enter new password)
+# createdb -E utf8 -U username new_local_db_name_here
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'team_sage',
-        'USER': 'team_sage',
-        'PASSWORD': 'bestsideproject'
+        'NAME': '', #db_name
+        'USER': '', #local_username
+        'PASSWORD': '' #local password
     }
 }
 
