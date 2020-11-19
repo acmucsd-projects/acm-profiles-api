@@ -5,30 +5,30 @@ from .serializers import *
 
 # Create your views here.
 
-class ProfileView(generics.CreateAPIView):
+class ProfileView(generics.ListCreateAPIView):
     queryset = Profiles.objects.all()
     serializer_class = ProfileSerializer
 
-class SettingsView(generics.CreateAPIView):
+class SettingsView(generics.ListCreateAPIView):
     queryset = Settings.objects.all()
     serializer_class = SettingsSerializer
 
-class FollowingView(generics.CreateAPIView):
+class FollowingView(generics.ListCreateAPIView):
     queryset = User_following.objects.all()
     serializer_class = FollowingSerializer
 
-class CommunitiesView(generics.CreateAPIView):
+class CommunitiesView(generics.ListCreateAPIView):
     queryset = Communities.objects.all()
     serializer_class = CommunitiesSerializer
 
-class CommunityMemberView(generics.CreateAPIView):
+class CommunityMemberView(generics.ListCreateAPIView):
     queryset = Community_members.objects.all()
     serializer_class = CommunityMemberSerializer
 
-class CommunitySocialView(generics.CreateAPIView):
+class CommunitySocialView(generics.ListCreateAPIView):
     queryset = Community_socials.objects.all()
     serializer_class = CommunitySocialSerializer
 
-class UserSocialView(generics.CreateAPIView):
+class UserSocialView(generics.ListCreateAPIView):
     queryset = User_socials.objects.all()
     serializer_class = UserSocialSerializer
