@@ -9,6 +9,7 @@ verify_ssl = true
 django = "*"
 pylint = "*"
 djangorestframework = "*"
+whitenoise = "*"
 
 [scripts]
 server = "python manage.py runserver"
