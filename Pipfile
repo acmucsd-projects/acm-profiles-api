@@ -10,6 +10,7 @@ django = "*"
 pylint = "*"
 djangorestframework = "*"
 psycopg2-binary = "*"
+whitenoise = "*"
 
 [scripts]
 server = "python manage.py runserver"
