@@ -1,11 +1,6 @@
 from rest_framework import serializers
 from .models import *
 
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profiles
-        fields = ('uuid', 'first_name', 'last_name', 'major',
-         'grad_year', 'profile_pic')
 
 class SettingsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,12 +12,6 @@ class FollowingSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_following
         fields = ('follower', 'following')
-
-class CommunitiesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Communities
-        fields = ('ucid', 'title', 'description', 'profile_image_link',
-         'active')
 
 class CommunityMemberSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,3 +28,20 @@ class UserSocialSerializer(serializers.ModelSerializer):
         model = User_socials
         fields = ('uuid', 'discord', 'facebook', 'snapchat',
          'github', 'linkedin', 'email')
+
+class ProfileSerializer(serializers.ModelSerializer):
+    settings = SettingsSerializer
+    communities = CommunityMemberSerializer
+    socials = UserSocialSerializer
+    class Meta:
+        model = Profiles
+        fields = ('uuid', 'first_name', 'last_name', 'major',
+         'grad_year', 'profile_pic', 'settings', 'communities', 'socials')
+
+class CommunitiesSerializer(serializers.ModelSerializer):
+    members = CommunityMemberSerializer
+    socials = CommunitySocialSerializer
+    class Meta:
+        model = Communities
+        fields = ('ucid', 'title', 'description', 'profile_image_link',
+         'active', 'members', 'socials')
