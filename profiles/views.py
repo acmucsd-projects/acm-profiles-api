@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, filters
 from .models import *
 from .serializers import *
 
@@ -8,6 +8,8 @@ from .serializers import *
 class ProfileView_LC(generics.ListCreateAPIView):
     queryset = Profiles.objects.all()
     serializer_class = ProfileSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['first_name', 'last_name']
 
 class ProfileView_RUD(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profiles.objects.all()
