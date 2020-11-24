@@ -9,7 +9,8 @@ class ProfileView_LC(generics.ListCreateAPIView):
     queryset = Profiles.objects.all()
     serializer_class = ProfileSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['first_name', 'last_name']
+    search_fields = ['first_name', 'last_name', 'socials__discord',
+    'socials__snapchat', 'socials__github', 'socials__email']
 
 class ProfileView_RUD(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profiles.objects.all()
