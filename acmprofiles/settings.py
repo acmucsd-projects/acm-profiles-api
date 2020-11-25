@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'acmprofiles.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-#intructions for setting up Postgres 
+#intructions for setting up Postgres
 # download here https://www.postgresql.org/download/
 # pipenv install
 # pipenv shell
@@ -152,4 +152,3 @@ STATICFILES_DIRS = (
 # https://warehouse.python.org/project/whitenoise/
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
