@@ -92,9 +92,11 @@ WSGI_APPLICATION = 'acmprofiles.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': '', #db_name
-        'USER': '', #local_username
-        'PASSWORD': '', #local password
+        'NAME': os.environ["DB_NAME"], #db_name
+        'USER': os.environ["DB_USER"], #local_username
+        'PASSWORD': os.environ["DB_PASSWORD"], #local password
+        'HOST': os.environ["DB_HOST"],
+        'PORT': os.environ["DB_PORT"]
     }
 }
 
