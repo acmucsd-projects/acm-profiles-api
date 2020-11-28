@@ -4,6 +4,8 @@ python:
 install:
 - pip install pipenv
 - pipenv sync
+services:
+- postgresql
 addons:
   postgresql: "12.4"
 before_script:
