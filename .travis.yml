@@ -1,15 +1,15 @@
 language: python
 python:
 - '3.8'
-install:
-- pip install pipenv
-- pipenv sync
 addons:
   postgresql: "12.4"
   apt:
     packages:
     - postgresql-12
     - postgresql-client-12
+install:
+- pip install pipenv
+- pipenv sync
 before_script:
 - pg_ctl start
 - psql -c 'create database travis_ci_test;' -U postgres
