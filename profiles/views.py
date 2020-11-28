@@ -40,6 +40,14 @@ class FollowingView_RD(generics.RetrieveDestroyAPIView):
 class CommunitiesView_LC(generics.ListCreateAPIView):
     queryset = Communities.objects.all()
     serializer_class = CommunitiesSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title', 'socials__discord', 'socials__instagram']
+    def get_queryset(self):
+        queryset = Communities.objects.all()
+        visibility = self.request.query_params.get('vis', None)
+        if visibility is not None:
+            queryset = queryset.filter(active=visibility)
+        return queryset
 
 class CommunitiesView_RUD(generics.RetrieveUpdateDestroyAPIView):
     queryset = Communities.objects.all()
