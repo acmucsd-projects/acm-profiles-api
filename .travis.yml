@@ -11,7 +11,11 @@ install:
 - pip install pipenv
 - pipenv sync
 before_script:
-- psql -c 'create database travis_ci_test;' -U postgres -w
+- sudo cp /etc/postgresql/10/main/pg_hba.conf /etc/postgresql/12/main/pg_hba.conf
+- sudo pg_ctlcluster 12 main restart
+- sh -c 'until pg_isready -p 5433; do echo "Waiting for the DB to be up..."; sleep 2; done'
+- psql -U postgres -p 5433 -c "CREATE USER testuser WITH PASSWORD 'secret' LOGIN;"
+- psql -U postgres -p 5433 -c "CREATE DATABASE travis_ci_test OWNER testuser;"
 script:
 - pipenv run lint
 - pipenv run test
@@ -21,7 +25,7 @@ env:
     - PGVER=12
     - PGPORT=5433
     - DB_NAME=travis_ci_test
-    - DB_USER=postgres
-    - DB_PASSWORD=
+    - DB_USER=testuser
+    - DB_PASSWORD=secret
     - DB_HOST=localhost
     - DB_PORT=5433
