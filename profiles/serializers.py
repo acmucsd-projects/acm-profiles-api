@@ -23,6 +23,11 @@ class FollowingSerializer(serializers.ModelSerializer):
         model = User_following
         fields = ('follower', 'following')
 
+class Community_MembershipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Community_members
+        fields = ('ucid')
+
 class CommunityMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Community_members

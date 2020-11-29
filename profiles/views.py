@@ -22,7 +22,6 @@ class SettingViewSet(ModelViewSet):
     queryset = Settings.objects.all()
     serializer_class = SettingsSerializer
 
-
 class FollowerView(generics.ListAPIView):
     queryset = User_following.objects.all()
     serializer_class = FollowerListSerializer
@@ -30,7 +29,6 @@ class FollowerView(generics.ListAPIView):
         uuid = self.kwargs.get("following")
         queryset = User_following.objects.filter(following=uuid)
         return queryset
-    
 
 class FollowingView(generics.ListAPIView):
     queryset = User_following.objects.all()
@@ -47,6 +45,14 @@ class FollowingView_LC(generics.ListCreateAPIView):
 class FollowingView_RD(generics.RetrieveDestroyAPIView):
     queryset = User_following.objects.all()
     serializer_class = FollowingSerializer
+
+class Community_MembershipView(generics.ListAPIView):
+    queryset = Community_members.objects.all()
+    serializer_class = Community_MembershipSerializer
+    def get_queryset(self):
+        uuid = self.kwargs.get("member")
+        queryset = Community_members.objects.filter(member_id=uuid)
+        return queryset
 
 class CommunitiesView_LC(generics.ListCreateAPIView):
     queryset = Communities.objects.all()
@@ -80,10 +86,7 @@ class CommunitySocialView_RUD(generics.RetrieveUpdateDestroyAPIView):
     queryset = Community_socials.objects.all()
     serializer_class = CommunitySocialSerializer
 
-class UserSocialView_LC(generics.ListCreateAPIView):
+class UserSocialViewSet(ModelViewSet):
     queryset = User_socials.objects.all()
     serializer_class = UserSocialSerializer
 
-class UserSocialView_RUD(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User_socials.objects.all()
-    serializer_class = UserSocialSerializer
