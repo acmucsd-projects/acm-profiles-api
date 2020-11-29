@@ -1,11 +1,12 @@
 from django.shortcuts import render
-from rest_framework import generics, filters
+from rest_framework import generics, filters, mixins
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .models import *
 from .serializers import *
 
 # Create your views here.
-
-class ProfileView_LC(generics.ListCreateAPIView):
+class ProfileViewSet(ModelViewSet):
+    queryset = Profiles.objects.all()
     serializer_class = ProfileSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['first_name', 'last_name', 'socials__discord',
@@ -17,17 +18,27 @@ class ProfileView_LC(generics.ListCreateAPIView):
             queryset = queryset.filter(settings__profile_visibility=visibility)
         return queryset
 
-class ProfileView_RUD(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Profiles.objects.all()
-    serializer_class = ProfileSerializer
-
-class SettingView_C(generics.CreateAPIView):
+class SettingViewSet(ModelViewSet):
     queryset = Settings.objects.all()
     serializer_class = SettingsSerializer
 
-class SettingView_RUD(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Settings.objects.all()
-    serializer_class = SettingsSerializer
+
+class FollowerView(generics.ListAPIView):
+    queryset = User_following.objects.all()
+    serializer_class = FollowerListSerializer
+    def get_queryset(self):
+        uuid = self.kwargs.get("following")
+        queryset = User_following.objects.filter(following=uuid)
+        return queryset
+    
+
+class FollowingView(generics.ListAPIView):
+    queryset = User_following.objects.all()
+    serializer_class = FollowingListSerializer
+    def get_queryset(self):
+        uuid = self.kwargs.get("follower")
+        queryset = User_following.objects.filter(follower=uuid)
+        return queryset
 
 class FollowingView_LC(generics.ListCreateAPIView):
     queryset = User_following.objects.all()
