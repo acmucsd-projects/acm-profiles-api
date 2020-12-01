@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
+from rest_framework.response import Response
 from rest_framework import generics, filters, mixins
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .models import *
@@ -125,9 +126,47 @@ class Community_ListView(generics.ListAPIView):
         queryset = Community_members.objects.filter(member_id=uuid)
         return queryset
 
-class CommunityMemberView_RUD(generics.RetrieveUpdateDestroyAPIView):
+"""
+Given ucid, an admin's uuid, and a member id, can make the member an admin
+
+Raises error if 
+1. The expected admin and/or member are not part of the community
+2. The individual adding an admin is not an admin
+3. The individual being added as an admin is already an admin
+"""
+class CommunityMemberView_RU(generics.RetrieveUpdateAPIView):
     queryset = Community_members.objects.all()
     serializer_class = CommunityMemberSerializer
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        member_filter = {}
+        admin_filter = {}
+        for field in self.kwargs:
+            if (field == "ucid"):
+                member_filter[field] = self.kwargs[field]
+                admin_filter[field] = self.kwargs[field]
+            if (field == "member"):
+                member_filter["member_id"] = self.kwargs[field]
+            if (field == "admin"):
+                admin_filter["member_id"] = self.kwargs[field]
+        admin_obj = get_object_or_404(queryset, **admin_filter)
+        if admin_obj.admin:
+            member_obj = get_object_or_404(queryset, **member_filter) 
+            if member_obj.admin:
+                raise Http404("Member is already admin") 
+            self.check_object_permissions(self.request, member_obj)
+            return member_obj
+        raise Http404("Only an admin can add other admins")
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        instance.admin = True
+        instance.save()
+        return Response(serializer.data)
 
 class CommunitySocialView_C(generics.CreateAPIView):
     queryset = Community_socials.objects.all()
