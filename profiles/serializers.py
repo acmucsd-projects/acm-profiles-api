@@ -26,12 +26,12 @@ class FollowingSerializer(serializers.ModelSerializer):
 class Community_MembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Community_members
-        fields = ('ucid')
+        fields = ('ucid',)
 
 class CommunityMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Community_members
-        fields = ('ucid', 'member_id', 'admin')
+        fields = ('member_id', 'admin')
 
 class CommunitySocialSerializer(serializers.ModelSerializer):
     class Meta:
