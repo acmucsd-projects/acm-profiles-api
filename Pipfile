@@ -9,6 +9,7 @@ verify_ssl = true
 django = "*"
 pylint = "*"
 djangorestframework = "*"
+psycopg2-binary = "*"
 whitenoise = "*"
 
 [scripts]

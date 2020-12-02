@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'profiles',
-    'rest_framework'
+    'rest_framework',
+    'django.contrib.postgres',
 ]
 
 MIDDLEWARE = [
@@ -80,11 +81,22 @@ WSGI_APPLICATION = 'acmprofiles.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+#intructions for setting up Postgres
+# download here https://www.postgresql.org/download/
+# pipenv install
+# pipenv shell
+# su OSuser_here
+# createuser -dP db_new_local_username_here (will prompt to enter new password)
+# createdb -E utf8 -U username new_local_db_name_here
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ["DB_NAME"], #db_name
+        'USER': os.environ["DB_USER"], #local_username
+        'PASSWORD': os.environ["DB_PASSWORD"], #local password
+        'HOST': os.environ["DB_HOST"],
+        'PORT': os.environ["DB_PORT"]
     }
 }
 
