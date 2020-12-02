@@ -18,10 +18,10 @@ urlpatterns = [
     path('community/search/', CommunitiesSearchView.as_view()),
     path('community/create/<str:uuid>/', CommunitiesCreateView.as_view()),
     path('community/edit/<str:ucid>/<str:uuid>/', CommunitiesView_RUD.as_view()),
-    path('community/member_list/<str:ucid>', Member_ListView.as_view()),
+    path('community/member_list/<str:ucid>/', Member_ListView.as_view()),
     path('community/<str:ucid>/add-admin/<str:member>/<str:admin>/', CommunityMemberView_RU.as_view()),
-    path('community/<str:ucid>/join/<str:uuid>', JoinCommunityView.as_view()),
-    path('community/<str:ucid>/leave/<str:uuid>', LeaveCommunityView.as_view()),
+    path('community/<str:ucid>/join/<str:uuid>/', JoinCommunityView.as_view()),
+    path('community/<str:ucid>/leave/<str:uuid>/', LeaveCommunityView.as_view()),
     path('community_social/', CommunitySocialView_C.as_view()),
     path('community_social/<str:pk>/', CommunitySocialView_RUD.as_view()),
 ]
