@@ -8,30 +8,40 @@ class SettingsSerializer(serializers.ModelSerializer):
         fields = ('uuid', 'profile_visibility', 'follower_visibility',
         'following_visibility')
 
+class FollowerListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User_following
+        fields = ('follower',)
+
 class FollowingListSerializer(serializers.ModelSerializer):
     class Meta: 
         model = User_following
         fields = ('following',)
 
-class FollowerListSerializer(serializers.ModelSerializer):
+class FollowingEmptySerializer(serializers.ModelSerializer):
     class Meta:
         model = User_following
-        fields = ('follower',)
-        
-class FollowingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User_following
-        fields = ('follower', 'following')
+        fields = ()
 
-class Community_MembershipSerializer(serializers.ModelSerializer):
+class CommunityListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Community_members
         fields = ('ucid',)
 
-class CommunityMemberSerializer(serializers.ModelSerializer):
+class MemberListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Community_members
         fields = ('member_id', 'admin')
+
+class CommunityMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Community_members
+        fields = ('ucid', 'member_id', 'admin')
+
+class JoinCommunityMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Community_members
+        fields = ()
 
 class CommunitySocialSerializer(serializers.ModelSerializer):
     class Meta:

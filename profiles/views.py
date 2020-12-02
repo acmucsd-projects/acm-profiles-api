@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from rest_framework.response import Response
-from rest_framework import generics, filters, mixins
+from rest_framework import generics, filters, mixins, status
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .models import *
 from .serializers import *
@@ -31,6 +31,13 @@ class SettingViewSet(ModelViewSet):
     serializer_class = SettingsSerializer
 
 """
+CRUD for user socials
+"""
+class UserSocialViewSet(ModelViewSet):
+    queryset = User_socials.objects.all()
+    serializer_class = UserSocialSerializer
+
+"""
 Given uuid, returns uuid's of users who follow them
 """
 class FollowerView(generics.ListAPIView):
@@ -50,6 +57,41 @@ class FollowingView(generics.ListAPIView):
     def get_queryset(self):
         uuid = self.kwargs.get("follower")
         queryset = User_following.objects.filter(follower=uuid)
+        return queryset
+
+"""
+Creates a follower relation given uuid's of two users
+"""
+class UserFollowView(generics.CreateAPIView):
+    queryset = User_following.objects.all()
+    serializer_class = FollowingEmptySerializer
+    def post(self, request, *args, **kwargs):
+        follow = User_following(follower=Profiles.objects.get(uuid=kwargs["follower"]), following=Profiles.objects.get(uuid=kwargs["following"]))
+        follow.save()
+        return Response(status=status.HTTP_201_CREATED)
+
+"""
+Removes follower relation given uuid's of two users
+"""
+class UserUnfollowView(generics.DestroyAPIView):
+    queryset = User_following.objects.all()
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        filter = {"follower" : self.kwargs["follower"],
+                  "following" : self.kwargs["following"]}
+        obj = get_object_or_404(queryset, **filter)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+"""
+Given uuid, returns ucid's of community's the user holds membership to
+"""
+class Community_ListView(generics.ListAPIView):
+    queryset = Community_members.objects.all()
+    serializer_class = CommunityListSerializer
+    def get_queryset(self):
+        uuid = self.kwargs.get("uuid")
+        queryset = Community_members.objects.filter(member_id=uuid)
         return queryset
 
 """
@@ -89,12 +131,10 @@ class CommunitiesView_RUD(generics.RetrieveUpdateDestroyAPIView):
         filter = {}
         membership_filter = {}
         for field in self.kwargs:
-            if (field == "ucid"):
-                filter[field] = self.kwargs[field]
-        for field in self.kwargs:
             if self.kwargs[field]:
                 if field == "ucid":
                     membership_filter[field] = self.kwargs[field]
+                    filter[field] = self.kwargs[field]
                 else:
                     membership_filter["member_id"] = self.kwargs[field]
         admin_obj = get_object_or_404(membership_queryset, **membership_filter)
@@ -109,21 +149,10 @@ Given ucid, returns uuid's and admin status of members with admins on top
 """
 class Member_ListView(generics.ListAPIView):
     queryset = Community_members.objects.all()
-    serializer_class = CommunityMemberSerializer
+    serializer_class = MemberListSerializer
     def get_queryset(self):
         ucid = self.kwargs.get("ucid")
         queryset = Community_members.objects.filter(ucid=ucid).order_by('-admin')
-        return queryset
-
-"""
-Given uuid, returns ucid's of community's the user holds membership to
-"""
-class Community_ListView(generics.ListAPIView):
-    queryset = Community_members.objects.all()
-    serializer_class = Community_MembershipSerializer
-    def get_queryset(self):
-        uuid = self.kwargs.get("uuid")
-        queryset = Community_members.objects.filter(member_id=uuid)
         return queryset
 
 """
@@ -168,6 +197,24 @@ class CommunityMemberView_RU(generics.RetrieveUpdateAPIView):
         instance.save()
         return Response(serializer.data)
 
+class JoinCommunityView(generics.CreateAPIView):
+    queryset = Community_members.objects.all()
+    serializer_class = JoinCommunityMemberSerializer
+    def post(self, request, *args, **kwargs):
+        member = Community_members(ucid=Communities.objects.get(ucid=kwargs["ucid"]), member_id=Profiles.objects.get(uuid=kwargs["uuid"]), admin=False)
+        member.save()
+        return Response(status=status.HTTP_201_CREATED)
+
+class LeaveCommunityView(generics.DestroyAPIView):
+    queryset = Community_members.objects.all()
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        filter = {"ucid" : self.kwargs["ucid"],
+                  "member_id" : self.kwargs["uuid"]}
+        obj = get_object_or_404(queryset, **filter)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
 class CommunitySocialView_C(generics.CreateAPIView):
     queryset = Community_socials.objects.all()
     serializer_class = CommunitySocialSerializer
@@ -176,7 +223,4 @@ class CommunitySocialView_RUD(generics.RetrieveUpdateDestroyAPIView):
     queryset = Community_socials.objects.all()
     serializer_class = CommunitySocialSerializer
 
-class UserSocialViewSet(ModelViewSet):
-    queryset = User_socials.objects.all()
-    serializer_class = UserSocialSerializer
 
