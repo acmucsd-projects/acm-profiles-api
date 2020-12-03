@@ -1,13 +1,21 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, filters
 from .models import *
 from .serializers import *
 
 # Create your views here.
 
 class ProfileView_LC(generics.ListCreateAPIView):
-    queryset = Profiles.objects.all()
     serializer_class = ProfileSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['first_name', 'last_name', 'socials__discord',
+    'socials__snapchat', 'socials__github', 'socials__email']
+    def get_queryset(self):
+        queryset = Profiles.objects.all()
+        visibility = self.request.query_params.get('vis', None)
+        if visibility is not None:
+            queryset = queryset.filter(settings__profile_visibility=visibility)
+        return queryset
 
 class ProfileView_RUD(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profiles.objects.all()
