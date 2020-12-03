@@ -12,7 +12,6 @@ djangorestframework = "*"
 psycopg2-binary = "*"
 whitenoise = "*"
 python-dotenv = "*"
-python-dotenv = "*"
 
 [scripts]
 server = "python manage.py runserver"
