@@ -1,0 +1,32 @@
+version: "3"
+
+# we'll have a app service and run .
+services: 
+    app:
+        build: 
+            context: .
+        ports: 
+            - "8000:8000" 
+        volumes: 
+            - ./app:/app #auto builds
+        command: >
+            sh -c "python manage.py makemigrations &&
+                python manage.py migrate &&
+                python manage.py runserver 0.0.0.0:8000"
+        depends_on:
+            - db  
+        environment: 
+            DB_NAME: ${DB_NAME}
+            DB_USER: ${DB_USER}
+            DB_PASSWORD: ${DB_PASSWORD}
+            DB_PORT: ${DB_PORT}
+            DB_HOST: ${DB_HOST}
+
+    db:
+        image: postgres:12.2
+        ports:
+            - ${DB_PORT}:5432
+        environment: 
+            POSTGRES_DB: ${DB_NAME}
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
