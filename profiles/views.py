@@ -101,7 +101,7 @@ Filter by if community is active
 """
 class CommunitiesSearchView(generics.ListAPIView):
     queryset = Communities.objects.all()
-    serializer_class = CommunitiesSerializer
+    serializer_class = CommunitiesDisplaySerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'socials__discord', 'socials__instagram']
     def get_queryset(self):
@@ -116,7 +116,7 @@ Create a community
 """
 class CommunitiesCreateView(generics.CreateAPIView):
     queryset = Communities.objects.all()
-    serializer_class = CommunitiesSerializer
+    serializer_class = CommunitiesCreateSerializer
 
 """
 Checks if user is admin of the community.
@@ -124,7 +124,7 @@ If yes, accepts the update/delete request
 """
 class CommunitiesView_RUD(generics.RetrieveUpdateDestroyAPIView):
     queryset = Communities.objects.all()
-    serializer_class = CommunitiesSerializer
+    serializer_class = CommunitiesCreateSerializer
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         membership_queryset = Community_members.objects.all()
