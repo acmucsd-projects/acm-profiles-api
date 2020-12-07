@@ -89,14 +89,30 @@ WSGI_APPLICATION = 'acmprofiles.wsgi.application'
 # createuser -dP db_new_local_username_here (will prompt to enter new password)
 # createdb -E utf8 -U username new_local_db_name_here
 
+# postgres://user:password@host:port/database_name
+db = os.environ["DATABASE_URL"][11:]
+ind = db.index(":")
+user = db[:ind]
+db = db[ind+1:]
+ind = db.index("@")
+password = db[:ind]
+db = db[ind+1:]
+ind = db.index(":")
+host = db[:ind]
+db = db[ind+1:]
+ind = db.index("/")
+port = db[:ind]
+name = db[ind+1:]
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ["DB_NAME"], #db_name
-        'USER': os.environ["DB_USER"], #local_username
-        'PASSWORD': os.environ["DB_PASSWORD"], #local password
-        'HOST': os.environ["DB_HOST"],
-        'PORT': os.environ["DB_PORT"]
+        'NAME': name, #db_name
+        'USER': user, #local_username
+        'PASSWORD': password, #local password
+        'HOST': host,
+        'PORT': port
     }
 }
 
