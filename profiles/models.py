@@ -22,7 +22,7 @@ class User_following(models.Model):
     following = models.ForeignKey(Profiles, on_delete=models.CASCADE, related_name='follower')
 
 class Communities(models.Model):
-    ucid = models.UUIDField(primary_key = True, default = uuid.uuid4, unique = True, editable = False)
+    ucid = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     title = models.CharField(max_length=255)
     description = models.TextField(blank = True)
     profile_image_link = models.CharField(max_length=255, blank = True)
