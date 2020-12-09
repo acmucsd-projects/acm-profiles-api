@@ -10,6 +10,7 @@ user_router.register(r'socials', UserSocialViewSet)
 
 urlpatterns = [
     path('user/', include(user_router.urls)),
+    path('user/recommendations/<str:uuid>/', RecommendationsView.as_view()),
     path('user/follower_list/<str:following>/', FollowerView.as_view()),
     path('user/following_list/<str:follower>/', FollowingView.as_view()),
     path('user/follow/<str:follower>/<str:following>/', UserFollowView.as_view()),
@@ -23,5 +24,5 @@ urlpatterns = [
     path('community/<str:ucid>/join/<str:uuid>/', JoinCommunityView.as_view()),
     path('community/<str:ucid>/leave/<str:uuid>/', LeaveCommunityView.as_view()),
     path('community_social/', CommunitySocialView_C.as_view()),
-    path('community_social/<str:pk>/', CommunitySocialView_RUD.as_view()),
+    path('community_social/<str:ucid>/<str:uuid>/', CommunitySocialView_RUD.as_view()),
 ]

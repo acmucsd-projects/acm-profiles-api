@@ -63,10 +63,23 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('uuid', 'first_name', 'last_name', 'major', 
         'grad_year', 'profile_pic', 'settings', 'communities', 'socials')
 
-class CommunitiesSerializer(serializers.ModelSerializer):
+class CommunitiesCreateSerializer(serializers.ModelSerializer):
+    members = CommunityMemberSerializer
+    socials = CommunitySocialSerializer
+    class Meta:
+        model = Communities
+        fields = ('title', 'description', 'profile_image_link',
+         'active', 'members', 'socials')
+
+class CommunitiesDisplaySerializer(serializers.ModelSerializer):
     members = CommunityMemberSerializer
     socials = CommunitySocialSerializer
     class Meta:
         model = Communities
         fields = ('ucid', 'title', 'description', 'profile_image_link',
          'active', 'members', 'socials')
+
+class RecommendationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recommendations
+        fields = ('recommendation',)
