@@ -8,7 +8,7 @@ class Profiles(models.Model):
     first_name = models.CharField(max_length = 255)
     last_name = models.CharField(max_length = 255)
     major = models.CharField(max_length = 255, blank = True)
-    grad_year = models.IntegerField(blank = True)
+    grad_year = models.IntegerField(blank = True, null = True)
     profile_pic = models.CharField(blank = True, null = True, max_length = 255)
 
 class Settings(models.Model):
@@ -23,7 +23,7 @@ class User_following(models.Model):
 
 class Communities(models.Model):
     ucid = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, unique = True)
     description = models.TextField(blank = True)
     profile_image_link = models.CharField(max_length=255, blank = True)
     active = models.BooleanField(max_length=255, default = True)
@@ -47,5 +47,10 @@ class User_socials(models.Model):
     github = models.CharField(max_length=255, blank = True)
     linkedin = models.CharField(max_length=255, blank = True)
     email = models.EmailField(blank = True)
+
+class Recommendations(models.Model):
+    user = models.ForeignKey(Profiles, on_delete=models.CASCADE, related_name='recommendations')
+    recommendation = models.ForeignKey(Profiles, on_delete=models.CASCADE, related_name='recommended_user')
+    similarity = models.IntegerField(default=0)
 
 

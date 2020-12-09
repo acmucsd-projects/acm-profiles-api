@@ -78,3 +78,8 @@ class CommunitiesDisplaySerializer(serializers.ModelSerializer):
         model = Communities
         fields = ('ucid', 'title', 'description', 'profile_image_link',
          'active', 'members', 'socials')
+
+class RecommendationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recommendations
+        fields = ('recommendation',)
