@@ -14,4 +14,4 @@ env:
     - secure: JygsEl6tfACAwL84grYHR+I1pAZw8q7bXx97sTjnpeljesWkuaHSffPrGg48gQSEib659GHCSbiHLWkjmuc1Os0/Aksj4F7SjUq4a0r2DSwV6BF1PW0tcO8We2sgU5TbmLJEU8b1Qk0ZGJDAOdEghRZtzK0+Pseeqbx4z0l2Om8MAbhE8PJCP3xnoCs5l6GYlYGRkvhwUc95gnHNv/aJ7+kq9nyEGlFeggLfy81Haq28BBZUTf8T1RVtf3Uff1ZvMAL5uL4SmPuJCvvBynzG25C0GwPi9Gbi3u1KuwzBCEhKs55tYKXxtMUne2MlLXU9SWtGadEbmFEweBcDx9Y4EEQiyPbYN+LZVdnn6MAxkIPaWtb2hRgP+JrVXAXgkm2kLojbZWUgQVIHmL4j2++0aD2Duw9New9c8mI/u02qtpeRxsufd4qF9zzdM/bUAmg3WOG7H+oThFHHG5ZG7TV/zWUvHx/nRd6xkENoPG3dP4dof7wrUhQ3BSi9bzb+FQlo8ood8ZsDnnHh3XRaxiEj46ZBFoJocSMkzuiGITfFXdtMbQV1NG8krjvesn+u5Uea408KWEaNoAj9yCjNekIy5dg44Aw+4fjJ/8gP021TqvLapQ7fO+tlI8bdtuCocMayLIK1C50NO7F3B32HaOqieou4Gd7ckrPY6RSDvSp5yls=
     # - PGVER=12
     # - PGPORT=5433
-    - DATABASE_URL=postgres://testuser:secret@db:5432/travis_ci_test
+    - DATABASE_URL=postgres://postgres:secret@db:5432/travis_ci_test
