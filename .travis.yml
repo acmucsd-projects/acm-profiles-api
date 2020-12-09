@@ -5,7 +5,7 @@ services:
 - docker
 before_install:
 - source ./env_setup.sh
-- docker-compose up --build
+- docker-compose up --build -d
 script:
 - docker exec -it app pipenv run lint
 - docker exec -it app pipenv run test
