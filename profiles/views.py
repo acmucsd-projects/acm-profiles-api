@@ -5,6 +5,10 @@ from rest_framework import generics, filters, mixins, status
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .models import *
 from .serializers import *
+import requests
+
+PORTAL_URL = ''
+PORTAL_USER_URL = PORTAL_URL + "/api/v2/user"
 
 """
 Search by name or socials.
@@ -22,6 +26,33 @@ class ProfileViewSet(ModelViewSet):
         if visibility is not None:
             queryset = queryset.filter(settings__profile_visibility=visibility)
         return queryset
+
+    def perform_create(self, request):
+        """parsing json objects from portal API calls and adding them"""
+        data = request.data
+        payload = {'email': data['email'], 'password': data['password']}
+        headers= {}
+
+        response = requests.request('POST', PORTAL_USER_URL, headers=headers, data = payload)
+        if response['error'] != None:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        present = Profiles.objects.filter_by(uuid=response['user']['uuid']).first()
+        
+        if present == None:
+            payload={}
+            portal_user = requests.request('POST', PORTAL_USER_URL, headers={"Authorization": f"Bearer {r['token']}"}, data=payload)['user']
+            user = Profiles(
+                uuid = portal_user['uuid'],
+                email = portal_user['email'],
+                first_name = portal_user['firstName'],
+                last_name = portal_user['lastName'],
+                major = portal_user['major'],
+                grad_year = portal_user['graduationYear'],
+                profile_pic = portal_user['profilePicture'],
+            )
+            user.save()
+            return Response(status=status.HTTP_201_CREATED)
+
 
 """
 CRUD for user settings
