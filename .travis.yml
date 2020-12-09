@@ -10,7 +10,7 @@ python:
 services:
 - docker
 before_install:
-- ./env_setup.sh
+- . ./env_setup.sh
 - docker-compose up --build
 install:
 # - pip install pipenv
