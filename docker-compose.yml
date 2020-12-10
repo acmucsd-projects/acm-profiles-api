@@ -6,8 +6,8 @@ services:
     image: postgres:12.5
     restart: always
     ports: 
-      - ${DB_PORT}:5432
+      - ${DOCKER_DB_PORT}:5432
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DOCKER_DB_NAME}
+      POSTGRES_USER: ${DOCKER_DB_USER}
+      POSTGRES_PASSWORD: ${DOCKER_DB_PASSWORD}
