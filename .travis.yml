@@ -7,7 +7,7 @@ install:
 - pip install pipenv
 - pipenv sync
 before_script:
-- source ./env_setup.sh
+- source ./env-setup.sh
 - docker-compose up -d
 script:
 - pipenv run lint
