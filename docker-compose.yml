@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  db:
+    container_name: db
+    image: postgres:12.5
+    restart: always
+    ports: 
+      - ${DOCKER_DB_PORT}:5432
+    environment:
+      POSTGRES_DB: ${DOCKER_DB_NAME}
+      POSTGRES_USER: ${DOCKER_DB_USER}
+      POSTGRES_PASSWORD: ${DOCKER_DB_PASSWORD}
