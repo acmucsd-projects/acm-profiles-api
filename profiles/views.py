@@ -82,14 +82,18 @@ class UserSocialView(generics.RetrieveUpdateAPIView):
 class RecommendationsView(generics.ListAPIView):
     """
     User's recommendation list
+    Doesn't recommend individuals the user is already following
     Sends top five results order in descending order of similarity
     """
     queryset = Recommendations.objects.all()
     serializer_class = RecommendationsSerializer
     def get_queryset(self):
         uuid = self.kwargs.get("user")
-        queryset = Recommendations.objects.filter(user=uuid).order_by('-similarity')[:5]
-        return queryset
+        recommendation_queryset = Recommendations.objects.filter(user=uuid)
+        following_queryset = User_following.objects.filter(follower=uuid)
+        for following in following_queryset:
+            recommendation_queryset.exclude(recommendation=following.following)
+        return recommendation_queryset.order_by('-similarity')[:5]
 
 class FollowerView(generics.ListAPIView):
     """
