@@ -5,7 +5,7 @@ from .models import *
 class SettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Settings
-        fields = ('uuid', 'profile_visibility', 'follower_visibility',
+        fields = ('user', 'profile_visibility', 'follower_visibility',
         'following_visibility')
 
 class FollowerListSerializer(serializers.ModelSerializer):
@@ -26,17 +26,17 @@ class FollowingEmptySerializer(serializers.ModelSerializer):
 class CommunityListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Community_members
-        fields = ('ucid',)
+        fields = ('community',)
 
 class MemberListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Community_members
-        fields = ('member_id', 'admin')
+        fields = ('member', 'admin')
 
 class CommunityMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Community_members
-        fields = ('ucid', 'member_id', 'admin')
+        fields = ('community', 'member', 'admin')
 
 class JoinCommunityMemberSerializer(serializers.ModelSerializer):
     class Meta:
@@ -46,12 +46,12 @@ class JoinCommunityMemberSerializer(serializers.ModelSerializer):
 class CommunitySocialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Community_socials
-        fields = ('ucid', 'discord', 'facebook', 'instagram')
+        fields = ('community', 'discord', 'facebook', 'instagram')
 
 class UserSocialSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_socials
-        fields = ('uuid', 'discord', 'facebook', 'snapchat',
+        fields = ('user', 'discord', 'facebook', 'snapchat',
          'github', 'linkedin', 'email')
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -63,10 +63,23 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('uuid', 'first_name', 'last_name', 'major', 
         'grad_year', 'profile_pic', 'settings', 'communities', 'socials')
 
-class CommunitiesSerializer(serializers.ModelSerializer):
+class CommunitiesCreateSerializer(serializers.ModelSerializer):
+    members = CommunityMemberSerializer
+    socials = CommunitySocialSerializer
+    class Meta:
+        model = Communities
+        fields = ('title', 'description', 'profile_image_link',
+         'active', 'members', 'socials')
+
+class CommunitiesDisplaySerializer(serializers.ModelSerializer):
     members = CommunityMemberSerializer
     socials = CommunitySocialSerializer
     class Meta:
         model = Communities
         fields = ('ucid', 'title', 'description', 'profile_image_link',
          'active', 'members', 'socials')
+
+class RecommendationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recommendations
+        fields = ('recommendation',)
