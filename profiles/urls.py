@@ -8,6 +8,9 @@ user_router.register(r'profile', ProfileViewSet)
 
 urlpatterns = [
     path('user/', include(user_router.urls)),
+    path('user/login/', LoginView.as_view()),
+    path('user/profile/<uuid:user>/', ProfileView.as_view()),
+    path('user/profile/search/', ProfileSearch.as_view()),
     path('user/profile/settings/<uuid:user>/', UserSettingsView.as_view()),
     path('user/profile/socials/<uuid:user>/', UserSocialView.as_view()),
     path('user/recommendations/<uuid:user>/', RecommendationsView.as_view()),

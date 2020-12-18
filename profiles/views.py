@@ -10,6 +10,21 @@ import requests
 PORTAL_URL = ''
 PORTAL_USER_URL = PORTAL_URL + "/api/v2/user"
 
+class LoginView(generics.RetrieveAPIView):
+    queryset = Profiles.objects.all()
+    serializer_class = ProfileSerializer
+    #def get_object(self):
+
+class ProfileView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Profiles.objects.all()
+    serializer_class = ProfileSerializer
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        filter = {"user" : self.kwargs.get("user")}
+        obj = get_object_or_404(queryset, **filter)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
 class ProfileViewSet(ModelViewSet):
     """
     Search by name or socials.
@@ -81,6 +96,19 @@ class ProfileViewSet(ModelViewSet):
             )
             user.save()
             return Response(status=status.HTTP_201_CREATED)
+
+class ProfileSearch(generics.ListAPIView):
+    queryset = Profiles.objects.all()
+    serializer_class = ProfileSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['first_name', 'last_name', 'socials__discord',
+    'socials__snapchat', 'socials__github', 'socials__email']
+    def get_queryset(self):
+        queryset = Profiles.objects.all()
+        visibility = self.request.query_params.get('vis', None)
+        if visibility is not None:
+            queryset = queryset.filter(settings__profile_visibility=visibility)
+        return queryset
 
 class UserSettingsView(generics.RetrieveUpdateAPIView):
     """
