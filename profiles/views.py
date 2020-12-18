@@ -36,16 +36,18 @@ class ProfileViewSet(ModelViewSet):
         settings.save()
         socials = User_socials(user=user)
         socials.save()
-        self.addRecommendations(uuid, user.major, user.grad_year)
+        self.addRecommendations(uuid, user.major, user.grad_year, user.college)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    def addRecommendations(self, id, major, grad_year):
+    def addRecommendations(self, id, major, grad_year, college):
         profiles = Profiles.objects.exclude(uuid=id)
         for e in profiles:
             similarity = 0
             if major != "" and e.major == major:
                 similarity += 1
             if grad_year is not None and e.grad_year == grad_year:
+                similarity += 1
+            if college != "" and e.college == college:
                 similarity += 1
             recommendation = Recommendations(user=Profiles.objects.get(uuid=id), recommendation=e, similarity=similarity)
             recommendation.save()
@@ -124,9 +126,15 @@ class UserFollowView(generics.CreateAPIView):
     queryset = User_following.objects.all()
     serializer_class = FollowingEmptySerializer
     def post(self, request, *args, **kwargs):
-        follow = User_following(follower=Profiles.objects.get(uuid=kwargs["follower"]), following=Profiles.objects.get(uuid=kwargs["following"]))
-        follow.save()
-        return Response(status=status.HTTP_201_CREATED)
+        follower = kwargs["follower"]
+        following = kwargs["following"]
+        repetitions = self.get_queryset().filter(follower=follower, following=following).count()
+        if repetitions == 0:
+            follow = User_following(follower=Profiles.objects.get(uuid=follower), following=Profiles.objects.get(uuid=following))
+            follow.save()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class UserUnfollowView(generics.DestroyAPIView):
     """
@@ -159,7 +167,7 @@ class CommunitiesSearchView(generics.ListAPIView):
     Filter by if community is active
     """
     queryset = Communities.objects.all()
-    serializer_class = CommunitiesDisplaySerializer
+    serializer_class = CommunitiesSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'socials__discord', 'socials__instagram']
     def get_queryset(self):
@@ -176,7 +184,7 @@ class CommunitiesCreateView(generics.CreateAPIView):
     Makes the community creator an admin
     """
     queryset = Communities.objects.all()
-    serializer_class = CommunitiesCreateSerializer
+    serializer_class = CommunitiesSerializer
     def post(self, request, *args, **kwargs):
         response = self.create(request, *args, **kwargs)
         community = Communities.objects.get(title=request.data.get("title"))
@@ -193,7 +201,7 @@ class EditCommunityView(generics.RetrieveUpdateDestroyAPIView):
     If yes, allows for updating/deleting the community.
     """
     queryset = Communities.objects.all()
-    serializer_class = CommunitiesCreateSerializer
+    serializer_class = CommunitiesSerializer
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         membership_queryset = Community_members.objects.all()
@@ -219,6 +227,40 @@ class MemberListView(generics.ListAPIView):
         queryset = Community_members.objects.filter(community=ucid).order_by('-admin')
         return queryset
 
+class CommunitySocialView(generics.RetrieveAPIView):
+    """
+    Given community id, returns community socials
+    """
+    queryset = Community_socials.objects.all()
+    serializer_class = CommunitySocialSerializer
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        filter = {"community" : self.kwargs.get("community")}
+        obj = get_object_or_404(queryset, **filter)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+class EditCommunitySocialView(generics.RetrieveUpdateAPIView):
+    """
+    Edits the community socials if requested by admin
+    """
+    queryset = Community_socials.objects.all()
+    serializer_class = CommunitySocialSerializer
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        membership_queryset = Community_members.objects.all()
+        filter = {}
+        membership_filter = {}
+        filter["community"] = self.kwargs["community"]
+        membership_filter["community"] = self.kwargs["community"]
+        membership_filter["member"] = self.kwargs["admin"]
+        admin_obj = get_object_or_404(membership_queryset, **membership_filter)
+        if admin_obj.admin:  
+            obj = get_object_or_404(queryset, **filter)
+            self.check_object_permissions(self.request, obj)
+            return obj
+        raise Http404("User is not an admin")
+    
 class AddAdminView(generics.RetrieveUpdateAPIView):
     """
     Given ucid, an admin's uuid, and a member id, can make the member an admin
@@ -269,10 +311,16 @@ class JoinCommunityView(generics.CreateAPIView):
     queryset = Community_members.objects.all()
     serializer_class = JoinCommunityMemberSerializer
     def post(self, request, *args, **kwargs):
-        member = Community_members(community=Communities.objects.get(ucid=kwargs["community"]), member=Profiles.objects.get(uuid=kwargs["user"]), admin=False)
-        member.save()
-        updateRecommendations(kwargs["user"], kwargs["community"], 1)
-        return Response(status=status.HTTP_201_CREATED)
+        community = kwargs["community"]
+        user = kwargs["user"]
+        repetitions = self.get_queryset().filter(community=community, member=user).count()
+        if repetitions == 0:
+            member = Community_members(community=Communities.objects.get(ucid=community), member=Profiles.objects.get(uuid=user), admin=False)
+            member.save()
+            updateRecommendations(kwargs["user"], kwargs["community"], 1)
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class LeaveCommunityView(generics.DestroyAPIView):
     """
@@ -293,31 +341,11 @@ class LeaveCommunityView(generics.DestroyAPIView):
         updateRecommendations(kwargs["member"], kwargs["community"], -1)
         return response
 
-class EditCommunitySocialView(generics.RetrieveUpdateAPIView):
-    """
-    Edits the community socials if requested by admin
-    """
-    queryset = Communities.objects.all()
-    serializer_class = CommunitiesCreateSerializer
-    def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset())
-        membership_queryset = Community_members.objects.all()
-        filter = {}
-        membership_filter = {}
-        membership_filter["community"] = self.kwargs["community"]
-        membership_filter["member"] = self.kwargs["admin"]
-        admin_obj = get_object_or_404(membership_queryset, **membership_filter)
-        if admin_obj.admin:  
-            obj = get_object_or_404(queryset, **filter)
-            self.check_object_permissions(self.request, obj)
-            return obj
-        raise Http404("User is not an admin")
-
 def updateRecommendations(user, community, change):
     """
     Function to update recommendations when a user joins or leaves a commmunity
     """
-    membership_queryset = Community_members.objects.filter(ucid=community).exclude(member_id=user)
+    membership_queryset = Community_members.objects.filter(community=community).exclude(member_id=user)
     for e in membership_queryset:
         recommendation = Recommendations.objects.get(user=user, recommendation=e.member_id)
         recommendation.similarity += change
