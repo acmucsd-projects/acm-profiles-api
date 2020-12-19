@@ -55,29 +55,16 @@ class UserSocialSerializer(serializers.ModelSerializer):
          'github', 'linkedin', 'email')
 
 class ProfileSerializer(serializers.ModelSerializer):
-    settings = SettingsSerializer
-    communities = CommunityMemberSerializer
-    socials = UserSocialSerializer
     class Meta:
         model = Profiles
         fields = ('uuid', 'first_name', 'last_name', 'major', 
-        'grad_year', 'profile_pic', 'settings', 'communities', 'socials')
+        'grad_year', 'college', 'profile_pic')
 
-class CommunitiesCreateSerializer(serializers.ModelSerializer):
-    members = CommunityMemberSerializer
-    socials = CommunitySocialSerializer
-    class Meta:
-        model = Communities
-        fields = ('title', 'description', 'profile_image_link',
-         'active', 'members', 'socials')
-
-class CommunitiesDisplaySerializer(serializers.ModelSerializer):
-    members = CommunityMemberSerializer
-    socials = CommunitySocialSerializer
+class CommunitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Communities
         fields = ('ucid', 'title', 'description', 'profile_image_link',
-         'active', 'members', 'socials')
+         'active')
 
 class RecommendationsSerializer(serializers.ModelSerializer):
     class Meta:

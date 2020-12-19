@@ -23,8 +23,9 @@ urlpatterns = [
     path('community/create/<uuid:user>/', CommunitiesCreateView.as_view()),
     path('community/edit/<uuid:community>/<uuid:admin>/', EditCommunityView.as_view()),
     path('community/member_list/<uuid:community>/', MemberListView.as_view()),
+    path('community/social/<uuid:community>/', CommunitySocialView.as_view()),
+    path('community/social/<uuid:community>/<uuid:admin>/', EditCommunitySocialView.as_view()),
     path('community/<uuid:community>/add-admin/<uuid:member>/<uuid:admin>/', AddAdminView.as_view()),
     path('community/<uuid:community>/join/<uuid:user>/', JoinCommunityView.as_view()),
     path('community/<uuid:community>/leave/<uuid:member>/', LeaveCommunityView.as_view()),
-    path('community_social/<uuid:community>/<uuid:uuid>/', EditCommunitySocialView.as_view()),
 ]

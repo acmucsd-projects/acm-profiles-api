@@ -9,7 +9,8 @@ class Profiles(models.Model):
     last_name = models.CharField(max_length = 255)
     major = models.CharField(max_length = 255, blank = True)
     grad_year = models.IntegerField(blank = True, null = True)
-    profile_pic = models.CharField(blank = True, null = True, max_length = 255)
+    college = models.CharField(max_length = 255, blank = True)
+    profile_pic = models.CharField(max_length = 255, blank = True)
 
 class Settings(models.Model):
     user = models.ForeignKey(Profiles, on_delete=models.CASCADE, related_name='settings')
