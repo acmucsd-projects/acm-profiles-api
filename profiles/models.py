@@ -4,15 +4,16 @@ import uuid
 # Create your models here.
 
 class Profiles(models.Model):
-    uuid = models.CharField(primary_key = True, max_length = 255, unique = True)
+    uuid = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     first_name = models.CharField(max_length = 255)
     last_name = models.CharField(max_length = 255)
     major = models.CharField(max_length = 255, blank = True)
     grad_year = models.IntegerField(blank = True, null = True)
-    profile_pic = models.CharField(blank = True, null = True, max_length = 255)
+    college = models.CharField(max_length = 255, blank = True)
+    profile_pic = models.CharField(max_length = 255, blank = True)
 
 class Settings(models.Model):
-    uuid = models.ForeignKey(Profiles, on_delete=models.CASCADE, related_name='settings')
+    user = models.ForeignKey(Profiles, on_delete=models.CASCADE, related_name='settings')
     profile_visibility = models.BooleanField(default = True)
     follower_visibility = models.BooleanField(default = True)
     following_visibility = models.BooleanField(default = True)
@@ -29,18 +30,18 @@ class Communities(models.Model):
     active = models.BooleanField(max_length=255, default = True)
 
 class Community_members(models.Model):
-    ucid = models.ForeignKey(Communities, on_delete=models.CASCADE, related_name='members')
-    member_id = models.ForeignKey(Profiles, on_delete=models.CASCADE, related_name='communities')
+    community = models.ForeignKey(Communities, on_delete=models.CASCADE, related_name='members')
+    member = models.ForeignKey(Profiles, on_delete=models.CASCADE, related_name='communities')
     admin = models.BooleanField(default = False)
 
 class Community_socials(models.Model):
-    ucid = models.ForeignKey(Communities, on_delete=models.CASCADE, related_name='socials')
+    community = models.ForeignKey(Communities, on_delete=models.CASCADE, related_name='socials')
     discord = models.CharField(max_length=255, blank = True)
     facebook = models.CharField(max_length=255, blank = True)
     instagram = models.CharField(max_length=255, blank = True)
 
 class User_socials(models.Model):
-    uuid = models.ForeignKey(Profiles, on_delete=models.CASCADE, related_name='socials')
+    user = models.ForeignKey(Profiles, on_delete=models.CASCADE, related_name='socials')
     discord = models.CharField(max_length=255, blank = True)
     facebook = models.CharField(max_length=255, blank = True)
     snapchat = models.CharField(max_length=255, blank = True)
