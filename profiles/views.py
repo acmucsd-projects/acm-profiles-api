@@ -17,8 +17,7 @@ class LoginView(generics.CreateAPIView):
     Creates socials and settings
     Creates recommendation entries
     """
-    queryset = Profiles.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = LoginSerializer
     def create(self, request, *args, **kwargs):
         """parsing json objects from portal API calls and adding them"""
         data = request.data
@@ -27,7 +26,7 @@ class LoginView(generics.CreateAPIView):
         response = requests.post(PORTAL_USER_URL + "/auth/login", data = payload, headers = headers).json()
         token = jwt.decode(reponse["token"], verify=False)
         if response['error'] != None:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return response
         present = Profiles.objects.filter(uuid=token['uuid']).first()
         portal_user = requests.request('POST', PORTAL_USER_URL + "/user", headers={"Authorization": f"Bearer {response['token']}"}, data={}).json()['user']
         if present == None:

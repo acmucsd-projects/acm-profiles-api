@@ -70,3 +70,7 @@ class RecommendationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recommendations
         fields = ('recommendation',)
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(max_length=255)
