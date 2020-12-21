@@ -6,16 +6,76 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .models import *
 from .serializers import *
 import requests
+import json
+import jwt
 
 PORTAL_URL = ''
-PORTAL_USER_URL = PORTAL_URL + "/api/v2/user"
+PORTAL_USER_URL = PORTAL_URL + "/api/v2/"
 
-class LoginView(generics.RetrieveAPIView):
+class LoginView(generics.CreateAPIView):
+    """
+    Creates socials and settings
+    Creates recommendation entries
+    """
     queryset = Profiles.objects.all()
     serializer_class = ProfileSerializer
-    #def get_object(self):
+    def create(self, request, *args, **kwargs):
+        """parsing json objects from portal API calls and adding them"""
+        data = request.data
+        payload = {'email': data['email'], 'password': data['password']}
+        headers = {"Content-Type": "application/json"}
+        response = requests.post(PORTAL_USER_URL + "/auth/login", data = payload, headers = headers).json()
+        token = jwt.decode(reponse["token"], verify=False)
+        if response['error'] != None:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        present = Profiles.objects.filter(uuid=token['uuid']).first()
+        portal_user = requests.request('POST', PORTAL_USER_URL + "/user", headers={"Authorization": f"Bearer {response['token']}"}, data={}).json()['user']
+        if present == None:
+            user = Profiles(
+                uuid = portal_user['uuid'],
+                email = portal_user['email'],
+                first_name = portal_user['firstName'],
+                last_name = portal_user['lastName'],
+                major = portal_user['major'],
+                grad_year = portal_user['graduationYear'],
+                profile_pic = portal_user['profilePicture']
+            )
+            user.save()
+            settings = Settings(user=user)
+            settings.save()
+            socials = User_socials(user=user)
+            socials.save()
+            self.addRecommendations(user.uuid, user.major, user.grad_year)
+        else:
+            user = Profiles.objects.get(uuid=token['uuid'])
+            user.email = portal_user['email']
+            user.first_name = portal_user['firstName']
+            user.last_name = portal_user['lastName'],
+            user.major = portal_user['major'],
+            user.grad_year = portal_user['graduationYear'],
+            user.profile_pic = portal_user['profilePicture']
+            user.save()
+        return response
 
+    def addRecommendations(self, id, major, grad_year, college = None):
+        profiles = Profiles.objects.exclude(uuid=id)
+        for e in profiles:
+            similarity = 0
+            if major is not None and e.major == major:
+                similarity += 1
+            if grad_year is not None and e.grad_year == grad_year:
+                similarity += 1
+            if college is not None and e.college == college:
+                similarity += 1
+            recommendation = Recommendations(user=Profiles.objects.get(uuid=id), recommendation=e, similarity=similarity)
+            recommendation.save()
+            recommendation = Recommendations(user=e, recommendation=Profiles.objects.get(uuid=id), similarity=similarity)
+            recommendation.save()
+        
 class ProfileView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Update/Delete user's profile given uuid
+    """
     queryset = Profiles.objects.all()
     serializer_class = ProfileSerializer
     def get_object(self):
@@ -25,81 +85,11 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
         self.check_object_permissions(self.request, obj)
         return obj
 
-class ProfileViewSet(ModelViewSet):
+class ProfileSearch(generics.ListAPIView):
     """
     Search by name or socials.
     Filter by profile visibility from profile settings
-    Creates socials and settings
-    Creates recommendation entries
     """
-    queryset = Profiles.objects.all()
-    serializer_class = ProfileSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['first_name', 'last_name', 'socials__discord',
-    'socials__snapchat', 'socials__github', 'socials__email']
-    def get_queryset(self):
-        queryset = Profiles.objects.all()
-        visibility = self.request.query_params.get('vis', None)
-        if visibility is not None:
-            queryset = queryset.filter(settings__profile_visibility=visibility)
-        return queryset
-    
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        uuid = serializer.data.get("uuid")
-        user = Profiles.objects.get(uuid=uuid)
-        settings = Settings(user=user)
-        settings.save()
-        socials = User_socials(user=user)
-        socials.save()
-        self.addRecommendations(uuid, user.major, user.grad_year, user.college)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def addRecommendations(self, id, major, grad_year, college):
-        profiles = Profiles.objects.exclude(uuid=id)
-        for e in profiles:
-            similarity = 0
-            if major != "" and e.major == major:
-                similarity += 1
-            if grad_year is not None and e.grad_year == grad_year:
-                similarity += 1
-            if college != "" and e.college == college:
-                similarity += 1
-            recommendation = Recommendations(user=Profiles.objects.get(uuid=id), recommendation=e, similarity=similarity)
-            recommendation.save()
-            recommendation = Recommendations(user=e, recommendation=Profiles.objects.get(uuid=id), similarity=similarity)
-            recommendation.save()
-
-    def perform_create(self, request):
-        """parsing json objects from portal API calls and adding them"""
-        data = request.data
-        payload = {'email': data['email'], 'password': data['password']}
-        headers= {}
-
-        response = requests.request('POST', PORTAL_USER_URL, headers=headers, data = payload)
-        if response['error'] != None:
-            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        present = Profiles.objects.filter_by(uuid=response['user']['uuid']).first()
-        
-        if present == None:
-            payload={}
-            portal_user = requests.request('POST', PORTAL_USER_URL, headers={"Authorization": f"Bearer {r['token']}"}, data=payload)['user']
-            user = Profiles(
-                uuid = portal_user['uuid'],
-                email = portal_user['email'],
-                first_name = portal_user['firstName'],
-                last_name = portal_user['lastName'],
-                major = portal_user['major'],
-                grad_year = portal_user['graduationYear'],
-                profile_pic = portal_user['profilePicture'],
-            )
-            user.save()
-            return Response(status=status.HTTP_201_CREATED)
-
-class ProfileSearch(generics.ListAPIView):
     queryset = Profiles.objects.all()
     serializer_class = ProfileSerializer
     filter_backends = [filters.SearchFilter]
