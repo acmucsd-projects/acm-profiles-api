@@ -5,12 +5,13 @@ from rest_framework import generics, filters, mixins, status
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .models import *
 from .serializers import *
+import os
 import requests
 import json
 import jwt
 
-PORTAL_URL = ''
-PORTAL_USER_URL = PORTAL_URL + "/api/v2/"
+PORTAL_URL = os.environ["MEMBERSHIP_PORTAL_API"]
+PORTAL_USER_URL = PORTAL_URL + "/api/v2"
 
 class LoginView(generics.CreateAPIView):
     """
@@ -23,38 +24,38 @@ class LoginView(generics.CreateAPIView):
         data = request.data
         payload = {'email': data['email'], 'password': data['password']}
         headers = {"Content-Type": "application/json"}
-        response = requests.post(PORTAL_USER_URL + "/auth/login", data = payload, headers = headers).json()
-        token = jwt.decode(reponse["token"], verify=False)
+        response = requests.post(PORTAL_USER_URL + "/auth/login", data = json.dumps(payload), headers = headers).json()
         if response['error'] != None:
-            return response
+            return Response(data={"error" : response["error"]["message"]}, status=status.HTTP_403_FORBIDDEN)
+        token = jwt.decode(response["token"], verify=False)
         present = Profiles.objects.filter(uuid=token['uuid']).first()
-        portal_user = requests.request('POST', PORTAL_USER_URL + "/user", headers={"Authorization": f"Bearer {response['token']}"}, data={}).json()['user']
+        portal_user = requests.get(PORTAL_USER_URL + "/user", headers={"Authorization": f"Bearer {response['token']}"}, data={}).json()["user"]
         if present == None:
             user = Profiles(
                 uuid = portal_user['uuid'],
-                email = portal_user['email'],
                 first_name = portal_user['firstName'],
                 last_name = portal_user['lastName'],
                 major = portal_user['major'],
                 grad_year = portal_user['graduationYear'],
-                profile_pic = portal_user['profilePicture']
+                profile_pic = portal_user['profilePicture'],
+                bio = portal_user['bio']
             )
             user.save()
             settings = Settings(user=user)
             settings.save()
-            socials = User_socials(user=user)
+            socials = User_socials(user=user, email = portal_user['email'])
             socials.save()
             self.addRecommendations(user.uuid, user.major, user.grad_year)
         else:
             user = Profiles.objects.get(uuid=token['uuid'])
-            user.email = portal_user['email']
             user.first_name = portal_user['firstName']
-            user.last_name = portal_user['lastName'],
-            user.major = portal_user['major'],
-            user.grad_year = portal_user['graduationYear'],
+            user.last_name = portal_user['lastName']
+            user.major = portal_user['major']
+            user.grad_year = portal_user['graduationYear']
             user.profile_pic = portal_user['profilePicture']
             user.save()
-        return response
+        response["uuid"] = token["uuid"]
+        return Response(data=response, status=status.HTTP_201_CREATED)
 
     def addRecommendations(self, id, major, grad_year, college = None):
         profiles = Profiles.objects.exclude(uuid=id)
