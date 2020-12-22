@@ -53,6 +53,7 @@ class LoginView(generics.CreateAPIView):
             user.major = portal_user['major']
             user.grad_year = portal_user['graduationYear']
             user.profile_pic = portal_user['profilePicture']
+            user.bio = portal_user['bio']
             user.save()
         response["uuid"] = token["uuid"]
         return Response(data=response, status=status.HTTP_201_CREATED)
@@ -80,7 +81,7 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
-        filter = {"user" : self.kwargs.get("user")}
+        filter = {"uuid" : self.kwargs.get("user")}
         obj = get_object_or_404(queryset, **filter)
         self.check_object_permissions(self.request, obj)
         return obj
