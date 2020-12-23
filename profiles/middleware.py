@@ -18,7 +18,7 @@ class AuthenticationMiddleware:
         if auth:
             response = self.get_response(request)
         else:
-            response = JsonResponse(data={"error" : "Invalid JWT"}, status = 403)
+            response = JsonResponse(data={"error" : "Invalid JWT"}, status = status.HTTP_401_UNAUTHORIZED)
         return response
 
     def authenticate(self, headers):
