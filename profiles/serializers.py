@@ -58,7 +58,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profiles
         fields = ('uuid', 'first_name', 'last_name', 'major', 
-        'grad_year', 'college', 'profile_pic')
+        'grad_year', 'college', 'profile_pic', 'bio')
 
 class CommunitiesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -70,3 +70,7 @@ class RecommendationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recommendations
         fields = ('recommendation',)
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(max_length=255)

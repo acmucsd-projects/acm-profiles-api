@@ -5,13 +5,94 @@ from rest_framework import generics, filters, mixins, status
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from .models import *
 from .serializers import *
+import os
+import requests
+import json
+import jwt
 
-class ProfileViewSet(ModelViewSet):
+PORTAL_URL = os.environ["MEMBERSHIP_PORTAL_API"]
+PORTAL_USER_URL = PORTAL_URL + "/api/v2"
+
+class LoginView(generics.CreateAPIView):
+    """
+    Logs user in given email and password.
+    Calls membership portal for verification and to 
+    retrieve jwt for future authentication.
+    New user: Make new profile, socials, settings, and recommendations.
+    Returning user: Cache profile.
+    """
+    serializer_class = LoginSerializer
+    def create(self, request, *args, **kwargs):
+        """parsing json objects from portal API calls and adding them"""
+        data = request.data
+        payload = {'email': data['email'], 'password': data['password']}
+        headers = {"Content-Type": "application/json"}
+        response = requests.post(PORTAL_USER_URL + "/auth/login", data = json.dumps(payload), headers = headers).json()
+        if response['error'] != None:
+            return Response(data={"error" : response["error"]["message"]}, status=status.HTTP_403_FORBIDDEN)
+        token = jwt.decode(response["token"], verify=False)
+        present = Profiles.objects.filter(uuid=token['uuid']).first()
+        portal_user = requests.get(PORTAL_USER_URL + "/user", headers={"Authorization": f"Bearer {response['token']}"}, data={}).json()["user"]
+        if present == None:
+            user = Profiles(
+                uuid = portal_user['uuid'],
+                first_name = portal_user['firstName'],
+                last_name = portal_user['lastName'],
+                major = portal_user['major'],
+                grad_year = portal_user['graduationYear'],
+                profile_pic = portal_user['profilePicture'],
+                bio = portal_user['bio']
+            )
+            user.save()
+            settings = Settings(user=user)
+            settings.save()
+            socials = User_socials(user=user, email = portal_user['email'])
+            socials.save()
+            self.addRecommendations(user.uuid, user.major, user.grad_year)
+        else:
+            user = Profiles.objects.get(uuid=token['uuid'])
+            user.first_name = portal_user['firstName']
+            user.last_name = portal_user['lastName']
+            user.major = portal_user['major']
+            user.grad_year = portal_user['graduationYear']
+            user.profile_pic = portal_user['profilePicture']
+            user.bio = portal_user['bio']
+            user.save()
+        response["uuid"] = token["uuid"]
+        return Response(data=response, status=status.HTTP_201_CREATED)
+
+    def addRecommendations(self, id, major, grad_year, college = None):
+        profiles = Profiles.objects.exclude(uuid=id)
+        for e in profiles:
+            similarity = 0
+            if major is not None and e.major == major:
+                similarity += 1
+            if grad_year is not None and e.grad_year == grad_year:
+                similarity += 1
+            if college is not None and e.college == college:
+                similarity += 1
+            recommendation = Recommendations(user=Profiles.objects.get(uuid=id), recommendation=e, similarity=similarity)
+            recommendation.save()
+            recommendation = Recommendations(user=e, recommendation=Profiles.objects.get(uuid=id), similarity=similarity)
+            recommendation.save()
+        
+class ProfileView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Update/Delete user's profile given uuid
+    """
+    queryset = Profiles.objects.all()
+    serializer_class = ProfileSerializer
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        filter = {"uuid" : self.kwargs.get("user")}
+        obj = get_object_or_404(queryset, **filter)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+class ProfileSearch(generics.ListAPIView):
     """
     Search by name or socials.
     Filter by profile visibility from profile settings
-    Creates socials and settings
-    Creates recommendation entries
     """
     queryset = Profiles.objects.all()
     serializer_class = ProfileSerializer
@@ -24,35 +105,6 @@ class ProfileViewSet(ModelViewSet):
         if visibility is not None:
             queryset = queryset.filter(settings__profile_visibility=visibility)
         return queryset
-    
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        uuid = serializer.data.get("uuid")
-        user = Profiles.objects.get(uuid=uuid)
-        settings = Settings(user=user)
-        settings.save()
-        socials = User_socials(user=user)
-        socials.save()
-        self.addRecommendations(uuid, user.major, user.grad_year, user.college)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def addRecommendations(self, id, major, grad_year, college):
-        profiles = Profiles.objects.exclude(uuid=id)
-        for e in profiles:
-            similarity = 0
-            if major != "" and e.major == major:
-                similarity += 1
-            if grad_year is not None and e.grad_year == grad_year:
-                similarity += 1
-            if college != "" and e.college == college:
-                similarity += 1
-            recommendation = Recommendations(user=Profiles.objects.get(uuid=id), recommendation=e, similarity=similarity)
-            recommendation.save()
-            recommendation = Recommendations(user=e, recommendation=Profiles.objects.get(uuid=id), similarity=similarity)
-            recommendation.save()
 
 class UserSettingsView(generics.RetrieveUpdateAPIView):
     """

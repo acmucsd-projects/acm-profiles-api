@@ -11,6 +11,8 @@ pylint = "*"
 djangorestframework = "*"
 psycopg2-binary = "*"
 whitenoise = "*"
+requests = "*"
+pyjwt = "*"
 
 [scripts]
 server = "python manage.py runserver"
