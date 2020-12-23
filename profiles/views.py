@@ -15,8 +15,11 @@ PORTAL_USER_URL = PORTAL_URL + "/api/v2"
 
 class LoginView(generics.CreateAPIView):
     """
-    Creates socials and settings
-    Creates recommendation entries
+    Logs user in given email and password.
+    Calls membership portal for verification and to 
+    retrieve jwt for future authentication.
+    New user: Make new profile, socials, settings, and recommendations.
+    Returning user: Cache profile.
     """
     serializer_class = LoginSerializer
     def create(self, request, *args, **kwargs):
