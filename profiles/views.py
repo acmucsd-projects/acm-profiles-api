@@ -11,7 +11,7 @@ import json
 import jwt
 
 PORTAL_URL = os.environ["MEMBERSHIP_PORTAL_API"]
-PORTAL_USER_URL = PORTAL_URL + "/api/v2"
+PORTAL_USER_URL = PORTAL_URL + "api/v2"
 
 class LoginView(generics.CreateAPIView):
     """

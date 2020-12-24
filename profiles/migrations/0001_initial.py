@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('discord', models.CharField(blank=True, max_length=255, null=True)),
                 ('facebook', models.CharField(blank=True, max_length=255, null=True)),
-                ('instgram', models.CharField(blank=True, max_length=255, null=True)),
+                ('instagram', models.CharField(blank=True, max_length=255, null=True)),
                 ('snapchat', models.CharField(blank=True, max_length=255, null=True)),
                 ('github', models.CharField(blank=True, max_length=255, null=True)),
                 ('linkedin', models.CharField(blank=True, max_length=255, null=True)),

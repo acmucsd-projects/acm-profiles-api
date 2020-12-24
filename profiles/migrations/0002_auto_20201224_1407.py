@@ -14,7 +14,7 @@ def prepopulate(apps, schema_editor):
     Recommendations = apps.get_model('profiles', 'Recommendations')
 
     shravanH = Profiles(
-        uuid="36699a50-eeda-4020-aa94-7a71feb472f2",
+        uuid="df6f1d0b-95b4-47c7-8c2e-844392961777",
         first_name="Shravan",
         last_name="Hariharan",
         major="Computer Science",
@@ -36,7 +36,7 @@ def prepopulate(apps, schema_editor):
     
 
     shravanK = Profiles(
-        uuid="36699a50-eeda-4020-aa94-7a71feb472f3",
+        uuid="16d9c560-fc43-4037-8690-9ca14de155d6",
         first_name="Shravan",
         last_name="Konduru",
         major="Computer Science",
@@ -57,7 +57,7 @@ def prepopulate(apps, schema_editor):
     ).save()
 
     kunal = Profiles(
-        uuid="36699a50-eeda-4020-aa94-7a71feb472f4",
+        uuid="7ddd1fdb-38a5-4af1-8543-8acf00305c8e",
         first_name="Kunal",
         last_name="Arora",
         major="Math-CS",
@@ -78,7 +78,7 @@ def prepopulate(apps, schema_editor):
     ).save()
 
     bryce = Profiles(
-        uuid="36699a50-eeda-4020-aa94-7a71feb472f5",
+        uuid="a855c16f-d678-4849-9ef9-1d04a0a19bd7",
         first_name="Bryce",
         last_name="Tsuyuki",
         major="Computer Science",
@@ -99,7 +99,7 @@ def prepopulate(apps, schema_editor):
     ).save()
 
     kim = Profiles(
-        uuid="36699a50-eeda-4020-aa94-7a71feb472g3",
+        uuid="e25cbea0-8dc4-44f5-b3ce-b92062c185ae",
         first_name="Kim",
         last_name="Jong-Un",
         major="Poltical Science",
