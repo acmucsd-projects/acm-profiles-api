@@ -45,6 +45,7 @@ class User_socials(models.Model):
     user = models.ForeignKey(Profiles, on_delete=models.CASCADE, related_name='socials')
     discord = models.CharField(max_length=255, blank = True, null = True)
     facebook = models.CharField(max_length=255, blank = True, null = True)
+    instgram = models.CharField(max_length=255, blank = True, null = True)
     snapchat = models.CharField(max_length=255, blank = True, null = True)
     github = models.CharField(max_length=255, blank = True, null = True)
     linkedin = models.CharField(max_length=255, blank = True, null = True)

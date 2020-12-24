@@ -97,7 +97,7 @@ class ProfileSearch(generics.ListAPIView):
     queryset = Profiles.objects.all()
     serializer_class = ProfileSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['first_name', 'last_name', 'socials__discord',
+    search_fields = ['first_name', 'last_name', 'socials__discord', 'socials_instagram',
     'socials__snapchat', 'socials__github', 'socials__email']
     def get_queryset(self):
         queryset = Profiles.objects.all()
