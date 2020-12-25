@@ -51,7 +51,7 @@ class CommunitySocialSerializer(serializers.ModelSerializer):
 class UserSocialSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_socials
-        fields = ('user', 'discord', 'facebook', 'snapchat',
+        fields = ('user', 'discord', 'facebook', 'instagram', 'snapchat',
          'github', 'linkedin', 'email')
 
 class ProfileSerializer(serializers.ModelSerializer):

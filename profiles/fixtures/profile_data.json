@@ -1,0 +1,67 @@
+[
+{
+   "model": "profiles.profiles",
+   "pk": "16d9c560-fc43-4037-8690-9ca14de155d6",
+   "fields": {
+      "first_name": "Shravan",
+      "last_name": "Konduru",
+      "major": "Computer Science",
+      "grad_year": 2024,
+      "college": null,
+      "profile_pic": null,
+      "bio": "It's me, Shravan!"
+   }
+},
+{
+   "model": "profiles.profiles",
+   "pk": "7ddd1fdb-38a5-4af1-8543-8acf00305c8e",
+   "fields": {
+      "first_name": "Kunal",
+      "last_name": "Arora",
+      "major": "Math-CS",
+      "grad_year": 2023,
+      "college": null,
+      "profile_pic": null,
+      "bio": "It's me, Kunal!"
+   }
+},
+{
+   "model": "profiles.profiles",
+   "pk": "a855c16f-d678-4849-9ef9-1d04a0a19bd7",
+   "fields": {
+      "first_name": "Bryce",
+      "last_name": "Tsuyuki",
+      "major": "Computer Science",
+      "grad_year": 2023,
+      "college": null,
+      "profile_pic": null,
+      "bio": "It's me, Bryce!"
+   }
+},
+{
+   "model": "profiles.profiles",
+   "pk": "df6f1d0b-95b4-47c7-8c2e-844392961777",
+   "fields": {
+      "first_name": "Shravan",
+      "last_name": "Hariharan",
+      "major": "Computer Science",
+      "grad_year": 2023,
+      "college": null,
+      "profile_pic": null,
+      "bio": "It's me, Shravan!"
+   }
+},
+{
+   "model": "profiles.profiles",
+   "pk": "e25cbea0-8dc4-44f5-b3ce-b92062c185ae",
+   "fields": {
+      "first_name": "ACM",
+      "last_name": "Profiles",
+      "major": "Poltical Science",
+      "grad_year": 2021,
+      "college": null,
+      "profile_pic": null,
+      "bio": null
+   }
+}
+]

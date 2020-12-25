@@ -11,7 +11,7 @@ import json
 import jwt
 
 PORTAL_URL = os.environ["MEMBERSHIP_PORTAL_API"]
-PORTAL_USER_URL = PORTAL_URL + "/api/v2"
+PORTAL_USER_URL = PORTAL_URL + "api/v2"
 
 class LoginView(generics.CreateAPIView):
     """
@@ -97,7 +97,7 @@ class ProfileSearch(generics.ListAPIView):
     queryset = Profiles.objects.all()
     serializer_class = ProfileSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['first_name', 'last_name', 'socials__discord',
+    search_fields = ['first_name', 'last_name', 'socials__discord', 'socials__instagram',
     'socials__snapchat', 'socials__github', 'socials__email']
     def get_queryset(self):
         queryset = Profiles.objects.all()

@@ -1,0 +1,72 @@
+[
+{
+   "model": "profiles.user_socials",
+   "pk": 1,
+   "fields": {
+      "user": "df6f1d0b-95b4-47c7-8c2e-844392961777",
+      "discord": "shravanH@4571",
+      "facebook": "https::www.facebook.com/../shravanHfb",
+      "instagram": "shravanH",
+      "snapchat": "shravanH",
+      "github": "shravanH2001",
+      "linkedin": "https://linkedin.com/user/shravan1",
+      "email": "shravan@ucsd.edu"
+   }
+},
+{
+   "model": "profiles.user_socials",
+   "pk": 2,
+   "fields": {
+      "user": "16d9c560-fc43-4037-8690-9ca14de155d6",
+      "discord": "shravanK@2313",
+      "facebook": "https::www.facebook.com/../shravanKfb",
+      "instagram": "shravanK",
+      "snapchat": "shravanK",
+      "github": "shravanK2002",
+      "linkedin": "https://linkedin.com/user/shravan2",
+      "email": "shravan2@ucsd.edu"
+   }
+},
+{
+   "model": "profiles.user_socials",
+   "pk": 3,
+   "fields": {
+      "user": "df6f1d0b-95b4-47c7-8c2e-844392961777",
+      "discord": "kunal@4211",
+      "facebook": "https::www.facebook.com/../kunalfb",
+      "instagram": "not_kunal",
+      "snapchat": "kunal7271",
+      "github": "aroralanuk",
+      "linkedin": "https://linkedin.com/user/kunalarora2001",
+      "email": "kuarora@ucsd.edu"
+   }
+},
+{
+   "model": "profiles.user_socials",
+   "pk": 4,
+   "fields": {
+      "user": "df6f1d0b-95b4-47c7-8c2e-844392961777",
+      "discord": "bryceT@4171",
+      "facebook": "https::www.facebook.com/../bryceTfb",
+      "instagram": "pentallelogram",
+      "snapchat": "pentallelogram",
+      "github": "pentallelogram",
+      "linkedin": "https://linkedin.com/user/pentallelogram",
+      "email": "brycetsu@ucsd.edu"
+   }
+},
+{
+   "model": "profiles.user_socials",
+   "pk": 5,
+   "fields": {
+      "user": "e25cbea0-8dc4-44f5-b3ce-b92062c185ae",
+      "discord": "acm@9999",
+      "facebook": "https::www.facebook.com/../acm",
+      "instagram": "acm_profiles",
+      "snapchat": "acm_profiles",
+      "github": "acm_profiles",
+      "linkedin": "https://linkedin.com/user/acm_profiles",
+      "email": "acm@ucsd.edu"
+   }
+}
+]
