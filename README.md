@@ -18,8 +18,9 @@ REST API for ACM Profiles. Built using Django and PostgreSQL.
 6.  Run `pipenv sync` to install all the dependencies and `pipenv shell` to activate the virtual environment.
 7.  Run the docker container: `docker-compose up -d`.
 8.  Make migrations to the database: `python manage.py migrate`.
-9.  Run the local testing server: `python manage.py runserver`.
-10. Follow setup instructions for the [`membership portal api`](https://github.com/acmucsd/membership-portal)
+9.  Load the test data: `python manage.py loaddata */fixtures/*.json`.
+10. Run the local testing server: `python manage.py runserver`.
+11. Follow setup instructions for the [`membership portal api`](https://github.com/acmucsd/membership-portal)
 
 Make sure that your databases for acm profiles and the membership portal are running on different ports. As a suggestion, use 5433 for acm profiles and 5432 for the membership portal. The two servers need to run on different ports as well. ACM profiles defaults to 8000, so run the membership portal on a different port, such as 3000.
 
@@ -32,6 +33,6 @@ DOCKER_DB_PORT='5433'
 DOCKER_DB_NAME='name'
 DOCKER_DB_USER='user'
 DOCKER_DB_PASSWORD='password
-MEMBERSHIP_PORTAL_API='http://localhost:3000'
+MEMBERSHIP_PORTAL_API='http://localhost:3000/'
 
 ```

@@ -1,0 +1,32 @@
+[
+{
+   "model": "profiles.community_socials",
+   "pk": 1,
+   "fields": {
+      "community": "e8392639-2da3-454c-af74-7e91e45d46cb",
+      "discord": "invite link",
+      "facebook": "../bookclubACMUCSD",
+      "instagram": "../bookclubamcucsd"
+   }
+},
+{
+   "model": "profiles.community_socials",
+   "pk": 2,
+   "fields": {
+      "community": "7e6e0064-d81b-4aea-9ce1-b043d46aadf2",
+      "discord": "invite link for leetcode",
+      "facebook": "../leetcode",
+      "instagram": "../leetcode"
+   }
+},
+{
+   "model": "profiles.community_socials",
+   "pk": 3,
+   "fields": {
+      "community": "e8392639-2da3-454c-af74-7e91e45d46cb",
+      "discord": "invite link for CTF",
+      "facebook": "../cyberCTF@UCSD",
+      "instagram": "../cyberCTF@ACM"
+   }
+}
+]

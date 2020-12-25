@@ -1,0 +1,52 @@
+[
+{
+   "model": "profiles.settings",
+   "pk": 1,
+   "fields": {
+      "user": "df6f1d0b-95b4-47c7-8c2e-844392961777",
+      "profile_visibility": true,
+      "follower_visibility": true,
+      "following_visibility": true
+   }
+},
+{
+   "model": "profiles.settings",
+   "pk": 2,
+   "fields": {
+      "user": "16d9c560-fc43-4037-8690-9ca14de155d6",
+      "profile_visibility": true,
+      "follower_visibility": true,
+      "following_visibility": true
+   }
+},
+{
+   "model": "profiles.settings",
+   "pk": 3,
+   "fields": {
+      "user": "7ddd1fdb-38a5-4af1-8543-8acf00305c8e",
+      "profile_visibility": true,
+      "follower_visibility": true,
+      "following_visibility": false
+   }
+},
+{
+   "model": "profiles.settings",
+   "pk": 4,
+   "fields": {
+      "user": "a855c16f-d678-4849-9ef9-1d04a0a19bd7",
+      "profile_visibility": true,
+      "follower_visibility": false,
+      "following_visibility": true
+   }
+},
+{
+   "model": "profiles.settings",
+   "pk": 5,
+   "fields": {
+      "user": "e25cbea0-8dc4-44f5-b3ce-b92062c185ae",
+      "profile_visibility": false,
+      "follower_visibility": false,
+      "following_visibility": false
+   }
+}
+]
