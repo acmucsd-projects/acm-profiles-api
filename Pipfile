@@ -13,6 +13,7 @@ psycopg2-binary = "*"
 whitenoise = "*"
 requests = "*"
 pyjwt = "*"
+drf-yasg = "*"
 
 [scripts]
 server = "python manage.py runserver"
