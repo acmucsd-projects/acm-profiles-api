@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404, JsonResponse
+from django.http.response import HttpResponseNotFound
 import requests
 import os
 
@@ -17,6 +18,10 @@ class AuthenticationMiddleware:
             auth = self.authenticate(request.headers)
         if auth:
             response = self.get_response(request)
+            if type(response) != Response:
+                if type(response) == HttpResponseNotFound:
+                    return JsonResponse(data={"error" : "HTTP Response Not Found. Invalid URL."}, status = status.HTTP_404_NOT_FOUND)
+                return JsonResponse(data={"error" : "Invalid Response"})
         else:
             response = JsonResponse(data={"error" : "Invalid JWT"}, status = status.HTTP_401_UNAUTHORIZED)
         return response
@@ -26,6 +31,5 @@ class AuthenticationMiddleware:
             return False
         response = requests.get(PORTAL_USER_URL + "/user", headers={"Authorization": headers["Authorization"]}, data={}).json()
         if response["error"] is not None:
-            print(response)
             return False
         return True
