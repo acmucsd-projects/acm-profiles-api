@@ -5,7 +5,7 @@ import requests
 import os
 
 PORTAL_URL = os.environ["MEMBERSHIP_PORTAL_API"]
-PORTAL_USER_URL = PORTAL_URL + "/api/v2"
+PORTAL_USER_URL = PORTAL_URL + "api/v2"
 
 class AuthenticationMiddleware:
     def __init__(self, get_response):
@@ -13,7 +13,7 @@ class AuthenticationMiddleware:
 
     def __call__(self, request):
         auth = True
-        if request.path != "/api/user/login/":
+        if request.path != "/api/user/login":
             auth = self.authenticate(request.headers)
         if auth:
             response = self.get_response(request)
