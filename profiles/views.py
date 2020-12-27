@@ -88,23 +88,6 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
         obj = get_object_or_404(queryset, **filter)
         self.check_object_permissions(self.request, obj)
         return obj
-    
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        portal_user = requests.get(PORTAL_USER_URL + "/user/" + str(instance.uuid), headers={"Authorization": request.headers["Authorization"]}, data={}).json()["user"]
-        oldMajor = instance.major
-        oldGradYear = instance.grad_year
-        oldCollege = instance.college
-        instance.first_name = portal_user['firstName']
-        instance.last_name = portal_user['lastName']
-        instance.major = portal_user['major']
-        instance.grad_year = portal_user['graduationYear']
-        instance.profile_pic = portal_user['profilePicture']
-        instance.bio = portal_user['bio']
-        instance.save()
-        serializer = self.get_serializer(instance)
-        updateRecommendationsProfile(instance, oldMajor, oldGradYear, oldCollege)
-        return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
