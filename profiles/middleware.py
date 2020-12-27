@@ -21,7 +21,7 @@ class AuthenticationMiddleware:
             if type(response) != Response:
                 if type(response) == HttpResponseNotFound:
                     return JsonResponse(data={"error" : "HTTP Response Not Found. Invalid URL."}, status = status.HTTP_404_NOT_FOUND)
-                return JsonResponse(data={"error" : "Invalid Response"})
+                return JsonResponse(data={"error" : "Invalid Response"}, status = status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             response = JsonResponse(data={"error" : "Invalid JWT"}, status = status.HTTP_401_UNAUTHORIZED)
         return response

@@ -91,9 +91,9 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
     
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        portal_user = requests.get(PORTAL_USER_URL + "/user" + instance.uuid, headers={"Authorization": request.headers["Authorization"]}, data={}).json()["user"]
+        portal_user = requests.get(PORTAL_USER_URL + "/user/" + str(instance.uuid), headers={"Authorization": request.headers["Authorization"]}, data={}).json()["user"]
         oldMajor = instance.major
-        oldGradYear = instance.major
+        oldGradYear = instance.grad_year
         oldCollege = instance.college
         instance.first_name = portal_user['firstName']
         instance.last_name = portal_user['lastName']
@@ -441,7 +441,7 @@ def updateRecommendationsCommunity(user, community, change):
         recommendation.save()
     
 def updateRecommendationsProfile(user, oldMajor, oldGradYear, oldCollege):
-    profiles_queryset = Profiles.objects.exclude(uuid=user)
+    profiles_queryset = Profiles.objects.exclude(uuid=user.uuid)
     for p in profiles_queryset:
         recommendationOne = Recommendations.objects.get(user=user, recommendation=p)
         recommendationTwo = Recommendations.objects.get(user=p, recommendation=user)
