@@ -30,6 +30,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ALLOWED_ORIGINS = [
+    os.environ["FRONT_END_URL"]
+]
 
 # Application definition
 
@@ -43,11 +46,14 @@ INSTALLED_APPS = [
     'profiles',
     'rest_framework',
     'django.contrib.postgres',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     # Simplified static file serving.
     # https://warehouse.python.org/project/whitenoise/
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

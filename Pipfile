@@ -13,6 +13,7 @@ psycopg2-binary = "*"
 whitenoise = "*"
 requests = "*"
 pyjwt = "*"
+django-cors-headers = "*"
 
 [scripts]
 server = "python manage.py runserver"
