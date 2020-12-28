@@ -23,7 +23,7 @@
    "model": "profiles.community_socials",
    "pk": 3,
    "fields": {
-      "community": "e8392639-2da3-454c-af74-7e91e45d46cb",
+      "community": "306f6911-9afa-45bf-a0e7-6f61d4330843",
       "discord": "invite link for CTF",
       "facebook": "../cyberCTF@UCSD",
       "instagram": "../cyberCTF@ACM"
