@@ -14,6 +14,7 @@ whitenoise = "*"
 requests = "*"
 pyjwt = "*"
 django-cors-headers = "*"
+drf-yasg = "*"
 
 [scripts]
 server = "python manage.py runserver"

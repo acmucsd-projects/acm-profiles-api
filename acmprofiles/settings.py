@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django.contrib.postgres',
     'corsheaders',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -177,3 +178,13 @@ STATICFILES_DIRS = (
 # https://warehouse.python.org/project/whitenoise/
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+SWAGGER_SETTINGS={
+    'SECURITY_DEFINITIONS':{
+        "Auth token eg [Bearer (JWT) ]":{
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
