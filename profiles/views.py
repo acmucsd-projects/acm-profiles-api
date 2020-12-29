@@ -276,6 +276,7 @@ class EditCommunityView(generics.RetrieveUpdateDestroyAPIView):
         membership_queryset = Community_members.objects.all()
         filter = {}
         membership_filter = {}
+        filter["ucid"] = self.kwargs["community"]
         membership_filter["community"] = self.kwargs["community"]
         membership_filter["member"] = self.kwargs["admin"]
         admin_obj = get_object_or_404(membership_queryset, **membership_filter)
