@@ -14,6 +14,7 @@ urlpatterns = [
     path('user/follow/<uuid:follower>/<uuid:following>', UserFollowView.as_view()),
     path('user/unfollow/<uuid:follower>/<uuid:following>', UserUnfollowView.as_view()),
     path('user/community_list/<uuid:member>', CommunityListView.as_view()),
+    path('community/<uuid:community>', CommunityView.as_view()),
     path('community/search', CommunitiesSearchView.as_view()),
     path('community/create/<uuid:user>', CommunitiesCreateView.as_view()),
     path('community/edit/<uuid:community>/<uuid:admin>', EditCommunityView.as_view()),

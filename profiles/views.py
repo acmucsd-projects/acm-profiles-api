@@ -218,6 +218,19 @@ class UserUnfollowView(generics.DestroyAPIView):
         self.check_object_permissions(self.request, obj)
         return obj
 
+class CommunityView(generics.RetrieveAPIView):
+    """
+    Retrieve community given community id
+    """
+    queryset = Communities.objects.all()
+    serializer_class = CommunitiesSerializer
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        filter = {"ucid" : self.kwargs.get("community")}
+        obj = get_object_or_404(queryset, **filter)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
 class CommunityListView(generics.ListAPIView):
     """
     Given uuid, returns the ids of communities the user holds membership to
