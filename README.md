@@ -28,11 +28,12 @@ Make sure that your databases for acm profiles and the membership portal are run
 
 ```
 SECRET_KEY=secret_key
-DATABASE_URL='postgres://name:password@localhost:5433/user'
+DATABASE_URL='postgres://user:password@localhost:5433/name'
 DOCKER_DB_PORT='5433'
 DOCKER_DB_NAME='name'
 DOCKER_DB_USER='user'
-DOCKER_DB_PASSWORD='password
+DOCKER_DB_PASSWORD='password'
 MEMBERSHIP_PORTAL_API='http://localhost:3000/'
+FRONT_END_URL='http://localhost:3005'
 
 ```

@@ -89,6 +89,23 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
         self.check_object_permissions(self.request, obj)
         return obj
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        oldMajor = instance.major
+        oldGradYear = instance.grad_year
+        oldCollege = instance.college
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        updateRecommendationsProfile(instance, oldMajor, oldGradYear, oldCollege)
+        return Response(serializer.data)
+
 class ProfileSearch(generics.ListAPIView):
     """
     Search by name or socials.
@@ -201,6 +218,19 @@ class UserUnfollowView(generics.DestroyAPIView):
         self.check_object_permissions(self.request, obj)
         return obj
 
+class CommunityView(generics.RetrieveAPIView):
+    """
+    Retrieve community given community id
+    """
+    queryset = Communities.objects.all()
+    serializer_class = CommunitiesSerializer
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        filter = {"ucid" : self.kwargs.get("community")}
+        obj = get_object_or_404(queryset, **filter)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
 class CommunityListView(generics.ListAPIView):
     """
     Given uuid, returns the ids of communities the user holds membership to
@@ -259,6 +289,7 @@ class EditCommunityView(generics.RetrieveUpdateDestroyAPIView):
         membership_queryset = Community_members.objects.all()
         filter = {}
         membership_filter = {}
+        filter["ucid"] = self.kwargs["community"]
         membership_filter["community"] = self.kwargs["community"]
         membership_filter["member"] = self.kwargs["admin"]
         admin_obj = get_object_or_404(membership_queryset, **membership_filter)
@@ -369,7 +400,7 @@ class JoinCommunityView(generics.CreateAPIView):
         if repetitions == 0:
             member = Community_members(community=Communities.objects.get(ucid=community), member=Profiles.objects.get(uuid=user), admin=False)
             member.save()
-            updateRecommendations(kwargs["user"], kwargs["community"], 1)
+            updateRecommendationsCommunity(kwargs["user"], kwargs["community"], 1)
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -390,10 +421,10 @@ class LeaveCommunityView(generics.DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         response = self.destroy(request, *args, **kwargs)
-        updateRecommendations(kwargs["member"], kwargs["community"], -1)
+        updateRecommendationsCommunity(kwargs["member"], kwargs["community"], -1)
         return response
 
-def updateRecommendations(user, community, change):
+def updateRecommendationsCommunity(user, community, change):
     """
     Function to update recommendations when a user joins or leaves a commmunity
     """
@@ -405,3 +436,25 @@ def updateRecommendations(user, community, change):
         recommendation = Recommendations.objects.get(user=e.member_id, recommendation=user)
         recommendation.similarity += change
         recommendation.save()
+    
+def updateRecommendationsProfile(user, oldMajor, oldGradYear, oldCollege):
+    profiles_queryset = Profiles.objects.exclude(uuid=user.uuid)
+    for p in profiles_queryset:
+        recommendationOne = Recommendations.objects.get(user=user, recommendation=p)
+        recommendationTwo = Recommendations.objects.get(user=p, recommendation=user)
+        if p.major == oldMajor and p.major != user.major and oldMajor is not None:
+            recommendationOne.similarity -= 1
+        if p.major != oldMajor and p.major == user.major and user.major is not None:
+            recommendationOne.similarity += 1
+        if p.grad_year == oldGradYear and p.grad_year != user.grad_year and oldGradYear is not None:
+            recommendationOne.similarity -= 1
+        if p.grad_year != oldGradYear and p.grad_year == user.grad_year and user.grad_year is not None:
+            recommendationOne.similarity += 1
+        if p.college == oldCollege and p.college != user.college and oldCollege is not None:
+            recommendationOne.similarity -= 1
+        if p.college != oldCollege and p.college == user.college and user.college is not None:
+            recommendationOne.similarity += 1
+        recommendationTwo.similarity = recommendationOne.similarity
+        recommendationOne.save()
+        recommendationTwo.save()
+        

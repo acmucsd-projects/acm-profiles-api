@@ -31,7 +31,7 @@
    "model": "profiles.user_socials",
    "pk": 3,
    "fields": {
-      "user": "df6f1d0b-95b4-47c7-8c2e-844392961777",
+      "user": "7ddd1fdb-38a5-4af1-8543-8acf00305c8e",
       "discord": "kunal@4211",
       "facebook": "https::www.facebook.com/../kunalfb",
       "instagram": "not_kunal",
@@ -45,7 +45,7 @@
    "model": "profiles.user_socials",
    "pk": 4,
    "fields": {
-      "user": "df6f1d0b-95b4-47c7-8c2e-844392961777",
+      "user": "a855c16f-d678-4849-9ef9-1d04a0a19bd7",
       "discord": "bryceT@4171",
       "facebook": "https::www.facebook.com/../bryceTfb",
       "instagram": "pentallelogram",
