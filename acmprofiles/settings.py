@@ -33,9 +33,7 @@ else:
 
 ALLOWED_HOSTS = []
 
-CORS_ALLOWED_ORIGINS = [
-    os.environ["FRONT_END_URL"]
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -56,7 +54,6 @@ MIDDLEWARE = [
     # Simplified static file serving.
     # https://warehouse.python.org/project/whitenoise/
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
