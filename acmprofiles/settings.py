@@ -28,7 +28,9 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ["DEBUG"] == "True")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "acm-profiles-api.herokuapp.com"
+]
 
 CORS_ALLOWED_ORIGINS = [
     os.environ["FRONT_END_URL"]
