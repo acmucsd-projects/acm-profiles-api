@@ -1,0 +1,1 @@
+web: gunicorn acmprofiles.wsgi --log-file -
