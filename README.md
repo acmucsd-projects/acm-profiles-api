@@ -35,6 +35,7 @@ DOCKER_DB_USER='user'
 DOCKER_DB_PASSWORD='password'
 MEMBERSHIP_PORTAL_API='http://localhost:3000/'
 FRONT_END_URL='http://localhost:3005'
+HOST=127.0.0.1
 DEBUG=True
 
 ```
