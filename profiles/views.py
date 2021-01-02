@@ -163,7 +163,7 @@ class RecommendationsView(generics.ListAPIView):
         recommendation_queryset = Recommendations.objects.filter(user=uuid)
         following_queryset = User_following.objects.filter(follower=uuid)
         for following in following_queryset:
-            recommendation_queryset.exclude(recommendation=following.following)
+            recommendation_queryset = recommendation_queryset.exclude(recommendation=following.following)
         return recommendation_queryset.order_by('-similarity')[:5]
 
 class FollowerView(generics.ListAPIView):
