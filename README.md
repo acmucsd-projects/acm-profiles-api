@@ -3,6 +3,8 @@ ACM Profiles API (Side Projects Sage Team)
 
 REST API for ACM Profiles. Built using Django and PostgreSQL.
 
+Unfortunately Heroku is taking down their free tier so the hosted version of this API will no longer be functional.
+
 ## Required Dependencies
 1. Python 3 and pip - [instructions](https://www.python.org/downloads/)
 2. Docker - [instructions](https://docs.docker.com/get-docker/)
